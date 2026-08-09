@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+  Page de secours hors-ligne, servie par le service worker (static/sw.js)
+  quand une navigation dans son scope (/app/static/) echoue faute de
+  reseau. Doit etre 100% autonome : pas de police Google Fonts externe,
+  pas de CSS/JS externe -- tout est inline, pour fonctionner meme sans
+  la moindre connexion.
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CentroPuertas - Sin conexión</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #F1F3F1;
+        font-family: Georgia, 'Times New Roman', serif;
+        color: #212121;
+        padding: 1.5rem;
+    }
+    .tarjeta {
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        max-width: 420px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .icono {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 1.2rem;
+        border-radius: 14px;
+    }
+    h1 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0 0 0.6rem;
+        color: #212121;
+    }
+    p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #555;
+        margin: 0 0 1.5rem;
+    }
+    button {
+        background: #4CAF50;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 8px;
+        padding: 0.7rem 1.4rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+    }
+    button:active { opacity: 0.85; }
+</style>
+</head>
+<body>
+    <div class="tarjeta">
+        <img class="icono" src="icon-192.png" alt="CentroPuertas">
+        <h1>Sin conexión</h1>
+        <p>
+            No se ha podido cargar CentroPuertas porque no hay conexión a
+            internet en este momento. Vuelve a intentarlo cuando recuperes
+            la señal o el WiFi.
+        </p>
+        <button onclick="location.reload()">Reintentar</button>
+    </div>
+</body>
+</html>

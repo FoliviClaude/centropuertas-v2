@@ -1,0 +1,4 @@
+# Carpeta de distribuciones generadas (incluye ejecutables compilados
+# de ~300 MB cada uno) -- no debe subirse al repositorio. El codigo
+# fuente real vive en control_partes_centropuertas/.
+Distribuciones_Centropuertas/

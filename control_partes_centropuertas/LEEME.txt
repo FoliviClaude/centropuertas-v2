@@ -1,0 +1,34 @@
+CENTROPUERTAS - APP DE PARTES DE TRABAJO
+==========================================
+
+PRIMERA VEZ:
+  1. Doble clic en "instalar_dependencias.bat" y espera a que termine.
+  2. Doble clic en "iniciar_app.bat". Se abrira sola una pestana del
+     navegador con la aplicacion.
+  3. Ve a "Ajustes / Perfil" y rellena tu nombre y tus dias de
+     vacaciones anuales.
+
+USO DIARIO:
+  - Doble clic en "iniciar_app.bat" para abrir la app.
+  - Para cerrarla, cierra la ventana negra que se abre (o pulsa Ctrl+C
+    dentro de ella). Cerrar solo la pestana del navegador no apaga
+    la aplicacion.
+
+DONDE SE GUARDAN TUS DATOS:
+  - Todo se guarda en el archivo "data\partes.db" (base de datos
+    SQLite), en esta misma carpeta. Ese archivo es lo unico que
+    necesitas copiar si cambias de ordenador o quieres una copia de
+    seguridad (tambien puedes descargarla desde Ajustes / Perfil).
+
+REQUISITOS:
+  - Tener Python instalado (ya esta preparado en este equipo).
+
+VERSION COMPILADA (.exe) - PARA DAR A UN COMPAÑERO SIN PYTHON:
+  1. Doble clic en "compilar_exe.bat" (tarda varios minutos la primera
+     vez). Genera la carpeta "dist\CentropuertasPartes".
+  2. Comprime esa carpeta entera en un .zip y compartela. Quien la
+     reciba solo tiene que descomprimirla y hacer doble clic en
+     "CentropuertasPartes.exe" -- no necesita instalar Python ni nada.
+  3. Esa copia guarda sus propios datos dentro de
+     "dist\CentropuertasPartes\_internal\data\partes.db", independientes
+     de los tuyos.

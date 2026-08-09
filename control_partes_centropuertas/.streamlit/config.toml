@@ -1,0 +1,13 @@
+# Tema visual por defecto de la app.
+# El usuario puede cambiar entre claro/oscuro en tiempo real desde
+# el menu de Streamlit (⋮ > Settings > Theme) sin tocar este archivo.
+[theme]
+base = "light"
+primaryColor = "#1F3B57"
+font = "sans serif"
+
+# "headless = false" (por defecto en local) hace que al lanzar la app
+# se abra sola una pestaña del navegador -- pensado para el uso diario
+# con doble clic en iniciar_app.bat, sin tener que copiar ninguna URL.
+[browser]
+gatherUsageStats = false

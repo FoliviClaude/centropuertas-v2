@@ -1,0 +1,14 @@
+# Charte graphique Centropuertas : vert vif pour les éléments d'action,
+# combiné avec du noir / gris anthracite / blanc. L'utilisateur peut
+# toujours basculer clair/sombre depuis le menu natif de Streamlit
+# (⋮ > Settings > Theme) ; ce fichier ne fixe que les couleurs de base.
+[theme]
+base = "light"
+primaryColor = "#4CAF50"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F1F3F1"
+textColor = "#212121"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
