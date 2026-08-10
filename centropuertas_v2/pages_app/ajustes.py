@@ -69,12 +69,6 @@ def render() -> None:
 
     st.markdown(f"**{t('ajustes.backup')}**")
     st.caption(t("ajustes.backup_desc"))
-    if db.DB_PATH.exists():
-        with open(db.DB_PATH, "rb") as f:
-            st.download_button(
-                t("ajustes.descargar_backup"), data=f.read(),
-                file_name="centropuertas_backup.db", mime="application/octet-stream",
-            )
 
     st.divider()
 

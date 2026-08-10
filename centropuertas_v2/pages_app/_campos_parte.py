@@ -9,9 +9,8 @@ dialogue d'édition rapide depuis "Historial".
 
 from __future__ import annotations
 
-import sqlite3
-
 import streamlit as st
+from libsql_client import Row
 
 import database as db
 from locales import t
@@ -27,7 +26,7 @@ def _selector_referencia(label_key: str, sin_valor_key: str, opciones: list,
     return ids[etiquetas.index(seleccion)]
 
 
-def campos_parte(parte_existente: sqlite3.Row | None, key_prefix: str) -> dict:
+def campos_parte(parte_existente: Row | None, key_prefix: str) -> dict:
     """Dessine tous les champs (sauf la date) et renvoie les valeurs saisies."""
     tipos_valores = db.TIPOS_JORNADA
     tipos_etiquetas = [t(f"tipo.{v}") for v in tipos_valores]

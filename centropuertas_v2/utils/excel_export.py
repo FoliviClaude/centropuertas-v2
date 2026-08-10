@@ -11,14 +11,14 @@ ici (contrairement au PDF), juste un tableau propre et traduit, prêt à
 from __future__ import annotations
 
 import io
-import sqlite3
 
 import pandas as pd
+from libsql_client import Row
 
 from locales import t, t_tipo_jornada
 
 
-def generar_excel_mensual(partes: list[sqlite3.Row]) -> bytes:
+def generar_excel_mensual(partes: list[Row]) -> bytes:
     """Construit le fichier Excel du mois et renvoie ses octets (pour `st.download_button`)."""
     filas = [
         {

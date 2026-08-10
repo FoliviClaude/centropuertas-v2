@@ -13,9 +13,9 @@ voit jamais que ses propres partes, jamais ceux d'un collègue.
 from __future__ import annotations
 
 import datetime as dt
-import sqlite3
 
 import streamlit as st
+from libsql_client import Row
 
 import auth
 import database as db
@@ -28,7 +28,7 @@ from utils.styling import encabezado_pagina
 
 
 @st.dialog(" ", width="large")
-def _dialogo_editar(parte: sqlite3.Row, technician_name: str) -> None:
+def _dialogo_editar(parte: Row, technician_name: str) -> None:
     fecha = dt.date.fromisoformat(parte["fecha"])
     st.markdown(f"### {t('common.editar')} — {fecha.strftime('%d/%m/%Y')}")
 
@@ -43,7 +43,7 @@ def _dialogo_editar(parte: sqlite3.Row, technician_name: str) -> None:
         st.rerun()
 
 
-def _tarjeta_parte(parte: sqlite3.Row, key_prefix: str, technician_name: str) -> None:
+def _tarjeta_parte(parte: Row, key_prefix: str, technician_name: str) -> None:
     """
     Affiche un parte sous forme de carte. `key_prefix` distingue les
     clés des boutons selon l'onglet (Streamlit garde en mémoire le

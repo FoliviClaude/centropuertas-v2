@@ -28,7 +28,7 @@ import streamlit as st
 import auth
 import database as db
 from locales import IDIOMAS_DISPONIBLES, get_idioma_activo, set_idioma_activo, t
-from pages_app import ajustes, dashboard, historial, nuevo_parte, referencias
+from pages_app import ajustes, dashboard, dashboard_admin, historial, nuevo_parte, referencias
 from utils.pwa import registrar_service_worker
 from utils.styling import inject_css
 
@@ -40,13 +40,36 @@ LOGO_PATH = BASE_DIR / "assets" / "logo_centropuertas.png"
 # icônes utilisent le système Material Icons intégré à Streamlit
 # (syntaxe ":material/nom_icone:") -- plus lisibles et cohérentes que
 # des emojis, et elles s'adaptent automatiquement au thème actif.
-SECCIONES = [
+#
+# Accès par rôle (voir auth.es_admin) :
+#   - technicien : saisie + son propre dashboard/historique (déjà
+#     filtrés par technician_name -- rien de confidentiel n'y fuite).
+#   - admin : en plus, le dashboard GLOBAL (tous techniciens) et la
+#     gestion des données (Referencias = catalogues partagés, Ajustes
+#     = configuration de l'entreprise).
+SECCIONES_TECNICO = [
     ("nav.nuevo_parte", ":material/engineering:", nuevo_parte.render),
-    ("nav.referencias", ":material/database:", referencias.render),
     ("nav.dashboard", ":material/monitoring:", dashboard.render),
     ("nav.historial", ":material/history:", historial.render),
+]
+SECCIONES_SOLO_ADMIN = [
+    ("nav.dashboard_admin", ":material/groups:", dashboard_admin.render),
+    ("nav.referencias", ":material/database:", referencias.render),
     ("nav.ajustes", ":material/settings:", ajustes.render),
 ]
+
+
+def _secciones_para(usuario: dict) -> list[tuple[str, str, object]]:
+    """
+    Liste des sections visibles pour ce rôle. Recalculée à chaque appel
+    (pas mise en cache) à partir de `usuario["role"]` -- jamais d'un
+    widget modifiable côté client -- pour que la liste des sections
+    reste correcte même si le rôle change (nouvelle connexion) sans
+    redémarrer le serveur.
+    """
+    if usuario["role"] == "admin":
+        return SECCIONES_TECNICO + SECCIONES_SOLO_ADMIN
+    return SECCIONES_TECNICO
 
 
 def _configurar_pagina() -> None:
@@ -163,10 +186,18 @@ def _barra_lateral(usuario: dict) -> str:
 
         st.markdown("<hr style='margin-top:0.4rem'>", unsafe_allow_html=True)
 
-        if "seccion_activa" not in st.session_state:
-            st.session_state["seccion_activa"] = SECCIONES[0][0]
+        secciones = _secciones_para(usuario)
+        claves_permitidas = {clave for clave, _, _ in secciones}
 
-        for clave_etiqueta, icono, _ in SECCIONES:
+        # Garde-fou : "seccion_activa" peut contenir une valeur d'un rôle
+        # différent si un autre compte s'est connecté dans la même session
+        # de navigateur (cerrar_sesion() ne vide que l'identité, pas le
+        # reste de session_state) -- ne jamais afficher une page admin à
+        # partir d'une valeur laissée par une session précédente.
+        if st.session_state.get("seccion_activa") not in claves_permitidas:
+            st.session_state["seccion_activa"] = secciones[0][0]
+
+        for clave_etiqueta, icono, _ in secciones:
             etiqueta = t(clave_etiqueta)
             es_activa = st.session_state["seccion_activa"] == clave_etiqueta
             if st.button(
@@ -196,7 +227,7 @@ def main() -> None:
 
     seccion_activa = _barra_lateral(usuario)
 
-    render_por_seccion = {clave: fn for clave, _, fn in SECCIONES}
+    render_por_seccion = {clave: fn for clave, _, fn in _secciones_para(usuario)}
     render_por_seccion[seccion_activa]()
 
 

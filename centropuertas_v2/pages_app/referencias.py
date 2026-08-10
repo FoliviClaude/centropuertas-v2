@@ -27,9 +27,8 @@ Deux pièges à éviter avec `@st.dialog` (découverts en testant) :
 
 from __future__ import annotations
 
-import sqlite3
-
 import streamlit as st
+from libsql_client import Row
 
 import database as db
 from locales import t
@@ -58,7 +57,7 @@ _TITULO_NUEVO_POR_TIPO = {
 }
 
 
-def _buscar_por_id(tipo: str, item_id: int) -> sqlite3.Row | None:
+def _buscar_por_id(tipo: str, item_id: int) -> Row | None:
     for item in _GET_POR_TIPO[tipo]():
         if item["id"] == item_id:
             return item

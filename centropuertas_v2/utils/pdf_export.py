@@ -9,9 +9,9 @@ ligne pour la signature du travailleur.
 from __future__ import annotations
 
 import io
-import sqlite3
 from pathlib import Path
 
+from libsql_client import Row
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
@@ -39,7 +39,7 @@ def generar_pdf_mensual(
     anio: int,
     mes: int,
     nombre_trabajador: str,
-    partes: list[sqlite3.Row],
+    partes: list[Row],
     empresa: str = "",
     nif_cif: str = "",
 ) -> bytes:

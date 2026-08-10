@@ -33,7 +33,7 @@ CLE_SESION = "usuario"
 
 
 def usuario_actual() -> dict | None:
-    """Renvoie {"login": ..., "nombre": ...} si quelqu'un est connecté, sinon None."""
+    """Renvoie {"login": ..., "nombre": ..., "role": ...} si quelqu'un est connecté, sinon None."""
     return st.session_state.get(CLE_SESION)
 
 
@@ -48,6 +48,18 @@ def nombre_tecnico_actual() -> str:
     de câblage, pas un cas à masquer silencieusement.
     """
     return st.session_state[CLE_SESION]["nombre"]
+
+
+def es_admin() -> bool:
+    """
+    True si le technicien connecté a le rôle 'admin'. Sert à app.py
+    pour décider quelles sections afficher -- ne doit JAMAIS être
+    déduit d'un widget modifiable côté client, seulement de la valeur
+    posée en session au moment du login (voir formulario_login), qui
+    provient elle-même directement de la colonne `role` en base.
+    """
+    usuario = usuario_actual()
+    return usuario is not None and usuario["role"] == "admin"
 
 
 def cerrar_sesion() -> None:
@@ -76,6 +88,7 @@ def formulario_login() -> None:
                 st.session_state[CLE_SESION] = {
                     "login": tecnico["login"],
                     "nombre": tecnico["nombre_display"],
+                    "role": tecnico["role"],
                 }
                 st.rerun()
 

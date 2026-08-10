@@ -61,6 +61,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "nav.nuevo_parte": "Nuevo Parte",
         "nav.referencias": "Referencias",
         "nav.dashboard": "Dashboard (Totales)",
+        "nav.dashboard_admin": "Dashboard Global",
         "nav.historial": "Historial & PDF",
         "nav.ajustes": "Ajustes",
 
@@ -70,6 +71,10 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "tipo.Baja": "Baja",
         "tipo.Guardia": "Guardia",
         "tipo.Festivo": "Festivo",
+
+        # --- Roles de usuario ----------------------------------------------
+        "role.technicien": "Técnico",
+        "role.admin": "Administrador",
 
         # --- Nuevo Parte ---------------------------------------------------
         "nuevo_parte.titulo": "Nuevo Parte Diario",
@@ -135,6 +140,31 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard.grafico_dietas": "Evolución de dietas por mes",
         "dashboard.de_dias": "de {dias} días asignados al año",
 
+        # --- Dashboard Global (admin) ---------------------------------------
+        "dashboard_admin.titulo": "Dashboard Global",
+        "dashboard_admin.subtitulo": "Totales de la empresa: todos los técnicos, año seleccionado.",
+        "dashboard_admin.total_technicians": "Técnicos con partes",
+        "dashboard_admin.sin_datos": "Todavía no hay partes registrados de ningún técnico para este año.",
+        "dashboard_admin.por_technician": "Desglose por técnico",
+        "dashboard_admin.columna_technician": "Técnico",
+        "dashboard_admin.columna_total_partes": "Partes",
+        "dashboard_admin.gestion_usuarios": "👥 Gestión de Usuarios",
+        "dashboard_admin.gestion_usuarios_desc": "Crea cuentas de acceso para los técnicos y consulta quién tiene acceso.",
+        "dashboard_admin.nuevo_usuario_login": "Nombre de usuario",
+        "dashboard_admin.nuevo_usuario_nombre": "Nombre mostrado",
+        "dashboard_admin.nuevo_usuario_password": "Contraseña",
+        "dashboard_admin.nuevo_usuario_role": "Rol",
+        "dashboard_admin.crear_cuenta": "Crear cuenta",
+        "dashboard_admin.usuario_creado_ok": "Cuenta \"{login}\" creada correctamente.",
+        "dashboard_admin.error_campos_vacios": "El nombre de usuario, el nombre mostrado y la contraseña no pueden estar vacíos.",
+        "dashboard_admin.error_usuario_existe": "Ya existe un usuario con ese nombre.",
+        "dashboard_admin.tabla_usuarios": "Usuarios actuales",
+        "dashboard_admin.columna_login": "Usuario",
+        "dashboard_admin.columna_nombre": "Nombre mostrado",
+        "dashboard_admin.columna_role": "Rol",
+        "dashboard_admin.columna_activo": "Activo",
+        "dashboard_admin.columna_creado_en": "Creado el",
+
         # --- Historial -----------------------------------------------------
         "historial.titulo": "Historial & Informes",
         "historial.subtitulo": "Consulta, edita y exporta los partes guardados.",
@@ -171,8 +201,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "ajustes.dias_vacaciones_anuales": "Días de vacaciones anuales",
         "ajustes.guardado_ok": "Configuración actualizada.",
         "ajustes.backup": "💾 Copia de seguridad",
-        "ajustes.backup_desc": "Descarga el fichero de base de datos completo (todos los clientes, tipos, compañeros y partes).",
-        "ajustes.descargar_backup": "⬇️ Descargar copia de seguridad",
+        "ajustes.backup_desc": "Los datos se guardan en la nube (Turso), no en un fichero local: ya no hay un único fichero que descargar. La copia de seguridad y la recuperación se gestionan a nivel de la base de datos Turso.",
         "ajustes.instalar_app": "📲 Instalar en el móvil",
         "ajustes.instalar_app_desc": "Instala CentroPuertas como aplicación en tu teléfono u ordenador para abrirla con un icono, sin pasar por el navegador.",
         "ajustes.instalar_app_boton": "Instalar aplicación",
@@ -231,6 +260,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "nav.nuevo_parte": "Nouveau Parte",
         "nav.referencias": "Références",
         "nav.dashboard": "Tableau de bord (Totaux)",
+        "nav.dashboard_admin": "Tableau de bord Global",
         "nav.historial": "Historique & PDF",
         "nav.ajustes": "Paramètres",
 
@@ -239,6 +269,10 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "tipo.Baja": "Arrêt maladie",
         "tipo.Guardia": "Garde",
         "tipo.Festivo": "Jour férié",
+
+        # --- Roles de usuario ----------------------------------------------
+        "role.technicien": "Technicien",
+        "role.admin": "Administrateur",
 
         "nuevo_parte.titulo": "Nouveau Parte Journalier",
         "nuevo_parte.subtitulo": "Enregistre ta journée : heures, indemnités, client et travail effectué.",
@@ -301,6 +335,31 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard.grafico_dietas": "Évolution des indemnités par mois",
         "dashboard.de_dias": "sur {dias} jours attribués par an",
 
+        # --- Dashboard Global (admin) ---------------------------------------
+        "dashboard_admin.titulo": "Tableau de bord Global",
+        "dashboard_admin.subtitulo": "Totaux de l'entreprise : tous les techniciens, année sélectionnée.",
+        "dashboard_admin.total_technicians": "Techniciens avec des partes",
+        "dashboard_admin.sin_datos": "Il n'y a pas encore de parte enregistré par un technicien pour cette année.",
+        "dashboard_admin.por_technician": "Répartition par technicien",
+        "dashboard_admin.columna_technician": "Technicien",
+        "dashboard_admin.columna_total_partes": "Partes",
+        "dashboard_admin.gestion_usuarios": "👥 Gestion des Utilisateurs",
+        "dashboard_admin.gestion_usuarios_desc": "Crée des comptes d'accès pour les techniciens et consulte qui a accès.",
+        "dashboard_admin.nuevo_usuario_login": "Nom d'utilisateur",
+        "dashboard_admin.nuevo_usuario_nombre": "Nom affiché",
+        "dashboard_admin.nuevo_usuario_password": "Mot de passe",
+        "dashboard_admin.nuevo_usuario_role": "Rôle",
+        "dashboard_admin.crear_cuenta": "Créer le compte",
+        "dashboard_admin.usuario_creado_ok": "Compte « {login} » créé avec succès.",
+        "dashboard_admin.error_campos_vacios": "Le nom d'utilisateur, le nom affiché et le mot de passe ne peuvent pas être vides.",
+        "dashboard_admin.error_usuario_existe": "Un utilisateur avec ce nom existe déjà.",
+        "dashboard_admin.tabla_usuarios": "Utilisateurs actuels",
+        "dashboard_admin.columna_login": "Utilisateur",
+        "dashboard_admin.columna_nombre": "Nom affiché",
+        "dashboard_admin.columna_role": "Rôle",
+        "dashboard_admin.columna_activo": "Actif",
+        "dashboard_admin.columna_creado_en": "Créé le",
+
         "historial.titulo": "Historique & Rapports",
         "historial.subtitulo": "Consulte, modifie et exporte les partes enregistrés.",
         "historial.tab_mes": "Vue mensuelle",
@@ -335,8 +394,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "ajustes.dias_vacaciones_anuales": "Jours de vacances annuels",
         "ajustes.guardado_ok": "Configuration mise à jour.",
         "ajustes.backup": "💾 Sauvegarde",
-        "ajustes.backup_desc": "Télécharge le fichier de base de données complet (clients, types, collègues et partes).",
-        "ajustes.descargar_backup": "⬇️ Télécharger la sauvegarde",
+        "ajustes.backup_desc": "Les données sont hébergées dans le cloud (Turso), plus dans un fichier local : il n'y a donc plus un seul fichier à télécharger. La sauvegarde et la restauration se gèrent désormais au niveau de la base Turso.",
         "ajustes.instalar_app": "📲 Installer sur mobile",
         "ajustes.instalar_app_desc": "Installe CentroPuertas comme une application sur ton téléphone ou ordinateur, avec sa propre icône, sans passer par le navigateur.",
         "ajustes.instalar_app_boton": "Installer l'application",
@@ -393,6 +451,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "nav.nuevo_parte": "New Entry",
         "nav.referencias": "References",
         "nav.dashboard": "Dashboard (Totals)",
+        "nav.dashboard_admin": "Global Dashboard",
         "nav.historial": "History & PDF",
         "nav.ajustes": "Settings",
 
@@ -401,6 +460,10 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "tipo.Baja": "Sick leave",
         "tipo.Guardia": "On-call",
         "tipo.Festivo": "Holiday",
+
+        # --- Roles de usuario ----------------------------------------------
+        "role.technicien": "Technician",
+        "role.admin": "Administrator",
 
         "nuevo_parte.titulo": "New Daily Entry",
         "nuevo_parte.subtitulo": "Log today's work day: hours, allowances, client and work performed.",
@@ -463,6 +526,31 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard.grafico_dietas": "Allowances trend by month",
         "dashboard.de_dias": "out of {dias} days allotted per year",
 
+        # --- Dashboard Global (admin) ---------------------------------------
+        "dashboard_admin.titulo": "Global Dashboard",
+        "dashboard_admin.subtitulo": "Company-wide totals: all technicians, selected year.",
+        "dashboard_admin.total_technicians": "Technicians with entries",
+        "dashboard_admin.sin_datos": "No entries recorded yet by any technician for this year.",
+        "dashboard_admin.por_technician": "Breakdown by technician",
+        "dashboard_admin.columna_technician": "Technician",
+        "dashboard_admin.columna_total_partes": "Entries",
+        "dashboard_admin.gestion_usuarios": "👥 User Management",
+        "dashboard_admin.gestion_usuarios_desc": "Create login accounts for technicians and see who has access.",
+        "dashboard_admin.nuevo_usuario_login": "Username",
+        "dashboard_admin.nuevo_usuario_nombre": "Display name",
+        "dashboard_admin.nuevo_usuario_password": "Password",
+        "dashboard_admin.nuevo_usuario_role": "Role",
+        "dashboard_admin.crear_cuenta": "Create account",
+        "dashboard_admin.usuario_creado_ok": "Account \"{login}\" created successfully.",
+        "dashboard_admin.error_campos_vacios": "Username, display name and password cannot be empty.",
+        "dashboard_admin.error_usuario_existe": "A user with that name already exists.",
+        "dashboard_admin.tabla_usuarios": "Current users",
+        "dashboard_admin.columna_login": "Username",
+        "dashboard_admin.columna_nombre": "Display name",
+        "dashboard_admin.columna_role": "Role",
+        "dashboard_admin.columna_activo": "Active",
+        "dashboard_admin.columna_creado_en": "Created on",
+
         "historial.titulo": "History & Reports",
         "historial.subtitulo": "Browse, edit and export saved entries.",
         "historial.tab_mes": "Monthly view",
@@ -497,8 +585,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "ajustes.dias_vacaciones_anuales": "Annual vacation days",
         "ajustes.guardado_ok": "Configuration updated.",
         "ajustes.backup": "💾 Backup",
-        "ajustes.backup_desc": "Download the full database file (clients, types, colleagues and entries).",
-        "ajustes.descargar_backup": "⬇️ Download backup",
+        "ajustes.backup_desc": "Data now lives in the cloud (Turso), not in a local file -- there is no longer a single file to download. Backup and recovery are handled at the Turso database level.",
         "ajustes.instalar_app": "📲 Install on mobile",
         "ajustes.instalar_app_desc": "Install CentroPuertas as an app on your phone or computer, with its own icon, without going through the browser.",
         "ajustes.instalar_app_boton": "Install app",
@@ -566,6 +653,11 @@ def t_tipo_jornada(tipo: str) -> str:
 def t_mes(numero: int) -> str:
     """Traduit un numéro de mois (1-12) en son nom dans la langue active."""
     return t(f"mes.{numero}")
+
+
+def t_role(role: str) -> str:
+    """Traduit une valeur de la colonne technicians.role (ex: 'admin')."""
+    return t(f"role.{role}")
 
 
 def t_dia_semana(indice: int) -> str:

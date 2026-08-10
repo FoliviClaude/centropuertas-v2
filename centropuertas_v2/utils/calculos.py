@@ -8,10 +8,10 @@ affichent toujours les mêmes chiffres.
 
 from __future__ import annotations
 
-import sqlite3
+from libsql_client import Row
 
 
-def resumen_de_partes(partes: list[sqlite3.Row]) -> dict:
+def resumen_de_partes(partes: list[Row]) -> dict:
     """Calcule le résumé (heures, extra, indemnités, jours spéciaux) d'une liste de partes."""
     horas_normales = 0.0
     horas_extra = 0.0
