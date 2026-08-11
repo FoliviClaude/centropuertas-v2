@@ -84,9 +84,7 @@ def _configurar_pagina() -> None:
         footer {visibility: hidden !important;}
         .stAppDeployButton {display: none !important;}
         </style>
-    """, unsafe_allow_html=True)
-    )
-        
+    """, unsafe_allow_html=True)       
         page_title="Centropuertas",
         page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "🚪",
         layout="wide",
