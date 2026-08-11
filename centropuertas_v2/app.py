@@ -74,6 +74,7 @@ def _secciones_para(usuario: dict) -> list[tuple[str, str, object]]:
 
 def _configurar_pagina() -> None:
     st.set_page_config(
+        
         page_title="Centropuertas",
         page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "🚪",
         layout="wide",
