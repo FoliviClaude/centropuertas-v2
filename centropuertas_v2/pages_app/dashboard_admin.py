@@ -24,6 +24,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
+import auth
 import database as db
 from locales import t, t_role
 from utils.styling import encabezado_pagina
@@ -147,3 +148,50 @@ def _seccion_gestion_usuarios() -> None:
         for u in usuarios
     ]
     st.dataframe(pd.DataFrame(filas), hide_index=True, width="stretch")
+
+    st.markdown(f"**{t('dashboard_admin.eliminar_usuario')}**")
+    # Le compte actuellement connecté n'apparaît jamais dans la liste :
+    # se supprimer soi-même en pleine session mènerait à un état confus
+    # (session encore "connectée" mais compte disparu en base) -- si un
+    # admin veut vraiment supprimer son propre compte, il doit le faire
+    # depuis un AUTRE compte admin.
+    login_actual = auth.usuario_actual()["login"]
+    candidatos = [u for u in usuarios if u["login"] != login_actual]
+
+    if not candidatos:
+        st.caption(t("dashboard_admin.sin_otras_cuentas"))
+        return
+
+    etiquetas = [f'{u["nombre_display"]} ({u["login"]})' for u in candidatos]
+    etiqueta_sel = st.selectbox(
+        t("dashboard_admin.eliminar_usuario_selector"), etiquetas,
+        label_visibility="collapsed", key="sel_eliminar_usuario",
+    )
+    usuario_sel = candidatos[etiquetas.index(etiqueta_sel)]
+
+    if st.button(t("dashboard_admin.eliminar_usuario_boton"), key="btn_eliminar_usuario"):
+        _dialogo_confirmar_eliminar_usuario(usuario_sel["id"], usuario_sel["nombre_display"], usuario_sel["login"])
+
+
+@st.dialog(" ", width="small")
+def _dialogo_confirmar_eliminar_usuario(technician_id: int, nombre: str, login: str) -> None:
+    """
+    Dialogue de confirmation avant suppression d'un compte -- même
+    convention que referencias._dialogo_confirmar_eliminar : titre
+    neutre dans le décorateur (non traduisible au moment de l'import),
+    seulement des valeurs simples en argument (jamais une closure, qui
+    cesserait de réagir aux clics sur les reruns suivants).
+    """
+    st.markdown(f"### {t('dashboard_admin.eliminar_usuario_confirmar_titulo', nombre=nombre, login=login)}")
+    st.caption(t("dashboard_admin.eliminar_usuario_confirmar_texto"))
+    c1, c2 = st.columns(2)
+    if c1.button(t("common.eliminar"), type="primary", width="stretch", key="dlg_eliminar_usuario_si"):
+        try:
+            db.eliminar_technician(technician_id)
+        except ValueError:
+            st.error(t("dashboard_admin.eliminar_usuario_error_ultimo_admin"))
+        else:
+            st.success(t("dashboard_admin.eliminar_usuario_ok"), icon="✅")
+            st.rerun()
+    if c2.button(t("common.cancelar"), width="stretch", key="dlg_eliminar_usuario_no"):
+        st.rerun()

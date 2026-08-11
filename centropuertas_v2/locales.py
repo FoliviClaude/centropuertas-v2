@@ -53,7 +53,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "auth.contrasena": "Contraseña",
         "auth.entrar": "Entrar",
         "auth.error_credenciales": "Usuario o contraseña incorrectos.",
-        "auth.credenciales_prueba": "Usuario de prueba: {login} · Contraseña: {password} (cámbiala cuanto antes desde una cuenta real).",
         "auth.sesion_como": "👤 {nombre}",
         "auth.cerrar_sesion": "Cerrar sesión",
 
@@ -164,6 +163,14 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard_admin.columna_role": "Rol",
         "dashboard_admin.columna_activo": "Activo",
         "dashboard_admin.columna_creado_en": "Creado el",
+        "dashboard_admin.eliminar_usuario": "🗑️ Eliminar cuenta",
+        "dashboard_admin.eliminar_usuario_selector": "Selecciona una cuenta",
+        "dashboard_admin.eliminar_usuario_boton": "Eliminar cuenta",
+        "dashboard_admin.eliminar_usuario_confirmar_titulo": "¿Eliminar la cuenta \"{nombre}\" ({login})?",
+        "dashboard_admin.eliminar_usuario_confirmar_texto": "Esta acción no se puede deshacer. Los partes de trabajo ya guardados por esta persona NO se eliminarán, pero ya no podrá conectarse a la aplicación.",
+        "dashboard_admin.eliminar_usuario_ok": "Cuenta eliminada.",
+        "dashboard_admin.eliminar_usuario_error_ultimo_admin": "No se puede eliminar el último administrador activo.",
+        "dashboard_admin.sin_otras_cuentas": "No hay otras cuentas que puedas eliminar.",
 
         # --- Historial -----------------------------------------------------
         "historial.titulo": "Historial & Informes",
@@ -253,7 +260,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "auth.contrasena": "Mot de passe",
         "auth.entrar": "Se connecter",
         "auth.error_credenciales": "Identifiant ou mot de passe incorrect.",
-        "auth.credenciales_prueba": "Compte de test : {login} · Mot de passe : {password} (à changer dès que possible pour un vrai compte).",
         "auth.sesion_como": "👤 {nombre}",
         "auth.cerrar_sesion": "Se déconnecter",
 
@@ -359,6 +365,14 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard_admin.columna_role": "Rôle",
         "dashboard_admin.columna_activo": "Actif",
         "dashboard_admin.columna_creado_en": "Créé le",
+        "dashboard_admin.eliminar_usuario": "🗑️ Supprimer un compte",
+        "dashboard_admin.eliminar_usuario_selector": "Sélectionne un compte",
+        "dashboard_admin.eliminar_usuario_boton": "Supprimer le compte",
+        "dashboard_admin.eliminar_usuario_confirmar_titulo": "Supprimer le compte « {nombre} » ({login}) ?",
+        "dashboard_admin.eliminar_usuario_confirmar_texto": "Cette action est irréversible. Les partes déjà enregistrés par cette personne NE seront PAS supprimés, mais elle ne pourra plus se connecter à l'application.",
+        "dashboard_admin.eliminar_usuario_ok": "Compte supprimé.",
+        "dashboard_admin.eliminar_usuario_error_ultimo_admin": "Impossible de supprimer le dernier administrateur actif.",
+        "dashboard_admin.sin_otras_cuentas": "Il n'y a pas d'autre compte à supprimer.",
 
         "historial.titulo": "Historique & Rapports",
         "historial.subtitulo": "Consulte, modifie et exporte les partes enregistrés.",
@@ -444,7 +458,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "auth.contrasena": "Password",
         "auth.entrar": "Log in",
         "auth.error_credenciales": "Incorrect username or password.",
-        "auth.credenciales_prueba": "Test account: {login} · Password: {password} (change it as soon as possible for a real account).",
         "auth.sesion_como": "👤 {nombre}",
         "auth.cerrar_sesion": "Log out",
 
@@ -550,6 +563,14 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard_admin.columna_role": "Role",
         "dashboard_admin.columna_activo": "Active",
         "dashboard_admin.columna_creado_en": "Created on",
+        "dashboard_admin.eliminar_usuario": "🗑️ Delete account",
+        "dashboard_admin.eliminar_usuario_selector": "Select an account",
+        "dashboard_admin.eliminar_usuario_boton": "Delete account",
+        "dashboard_admin.eliminar_usuario_confirmar_titulo": "Delete account \"{nombre}\" ({login})?",
+        "dashboard_admin.eliminar_usuario_confirmar_texto": "This cannot be undone. Work entries already saved by this person will NOT be deleted, but they will no longer be able to log in.",
+        "dashboard_admin.eliminar_usuario_ok": "Account deleted.",
+        "dashboard_admin.eliminar_usuario_error_ultimo_admin": "Cannot delete the last active administrator.",
+        "dashboard_admin.sin_otras_cuentas": "There are no other accounts you can delete.",
 
         "historial.titulo": "History & Reports",
         "historial.subtitulo": "Browse, edit and export saved entries.",

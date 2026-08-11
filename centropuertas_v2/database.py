@@ -437,6 +437,37 @@ def actualizar_role_technician(technician_id: int, role: str) -> None:
     _execute("UPDATE technicians SET role = ? WHERE id = ?", [role, technician_id])
 
 
+def eliminar_technician(technician_id: int) -> None:
+    """
+    Supprime définitivement un compte technicien (accès de connexion
+    uniquement). `technician_name` sur parts_de_travail est un texte
+    libre, pas une clé étrangère vers technicians.id : les partes déjà
+    enregistrés par cette personne ne sont PAS supprimés ni modifiés,
+    seul l'accès de connexion disparaît -- l'historique de l'entreprise
+    reste intact, ce qui est le comportement voulu (voir aussi le
+    "ON DELETE SET NULL" utilisé pour clients/types/collègues).
+
+    Refuse de supprimer le dernier compte 'admin' actif : sans lui,
+    plus personne ne pourrait jamais promouvoir un autre compte au
+    rôle admin (le bootstrap de init_db() ne recrée un admin que si la
+    table "technicians" est entièrement vide, pas s'il ne reste que des
+    comptes technicien). Lève ValueError dans ce cas -- à l'appelant
+    (l'UI) de l'afficher proprement.
+    """
+    fila = _fetchone("SELECT role FROM technicians WHERE id = ?", [technician_id])
+    if fila is None:
+        return  # déjà supprimé -- idempotent, pas une erreur
+
+    if fila["role"] == "admin":
+        total_admins_activos = _fetchone(
+            "SELECT COUNT(*) AS n FROM technicians WHERE role = 'admin' AND activo = 1"
+        )["n"]
+        if total_admins_activos <= 1:
+            raise ValueError("Impossible de supprimer le dernier compte admin actif.")
+
+    _execute("DELETE FROM technicians WHERE id = ?", [technician_id])
+
+
 def verificar_credenciales(login: str, password: str) -> Optional[Row]:
     """
     Vérifie login + mot de passe. Renvoie la ligne "technicians"

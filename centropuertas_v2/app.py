@@ -81,6 +81,51 @@ def _configurar_pagina() -> None:
     )
 
 
+def _ocultar_chrome_streamlit() -> None:
+    """
+    Masque les éléments d'interface propres à Streamlit (pas à
+    l'application) pour un rendu plus épuré sur mobile.
+
+    Le bouton "Deploy" et le menu ⋮ (rerun, clear cache...) sont déjà
+    masqués de façon robuste par `client.toolbarMode = "minimal"` dans
+    .streamlit/config.toml -- un réglage officiel qui ne dépend pas de
+    la structure interne du DOM de Streamlit. #MainMenu/.stAppDeployButton
+    ci-dessous sont donc redondants avec ce réglage -- gardés seulement
+    en filet de sécurité si jamais toolbarMode était un jour réinitialisé
+    (ex. surcharge par Streamlit Community Cloud).
+
+    IMPORTANT -- NE JAMAIS masquer <header> ou [data-testid="stToolbar"]
+    en entier (ex. "header {display: none}"), même si ça revient souvent
+    dans des exemples trouvés en ligne (y compris des extraits fournis
+    par l'utilisateur à deux reprises) -- vérifié en conditions réelles
+    (viewport mobile, Playwright) : le bouton qui réouvre la barre
+    latérale une fois repliée (data-testid="stExpandSidebarButton") est
+    un DESCENDANT de stToolbar, lui-même dans <header>, dans cette
+    version de Streamlit. "display: none" sur un ancêtre est en plus
+    irrécupérable pour un descendant (contrairement à "visibility:
+    hidden", qu'un enfant peut réafficher) -- masquer l'un ou l'autre de
+    ces deux éléments rend ce bouton définitivement injoignable et
+    bloque toute navigation sur mobile une fois la sidebar repliée.
+    Testé et confirmé cassé avant d'écarter ces deux règles.
+
+    [data-testid="stDecoration"] (la fine barre colorée tout en haut de
+    la page) est en revanche un élément à part, sans aucun lien avec la
+    sidebar -- son masquage est sûr.
+    """
+    st.markdown(
+        """
+        <style>
+        #MainMenu {visibility: hidden;}
+        .stAppDeployButton {display: none;}
+        footer {display: none;}
+        div[data-testid="stStatusWidget"] {display: none;}
+        [data-testid="stDecoration"] {display: none;}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def _pantalla_login() -> None:
     """Écran affiché tant que personne n'est connecté : logo + formulaire."""
     _, columna_centro, _ = st.columns([1, 1.2, 1])
@@ -214,6 +259,7 @@ def _barra_lateral(usuario: dict) -> str:
 
 def main() -> None:
     _configurar_pagina()
+    _ocultar_chrome_streamlit()
     db.init_db()
 
     usuario = auth.usuario_actual()

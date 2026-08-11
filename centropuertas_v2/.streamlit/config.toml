@@ -13,6 +13,16 @@ font = "sans serif"
 [browser]
 gatherUsageStats = false
 
+# "minimal" masque le menu ⋮ (rerun, clear cache, Deploy...) de façon
+# robuste et officiellement supportée -- contrairement à une règle CSS
+# ciblant #MainMenu/.stAppDeployButton, ce réglage ne dépend pas de la
+# structure interne du DOM de Streamlit et ne casse pas d'une version à
+# l'autre. Les options resteront masquées tant qu'aucune n'est ajoutée
+# explicitement via st.set_page_config(menu_items=...) ou par Streamlit
+# Community Cloud lui-même.
+[client]
+toolbarMode = "minimal"
+
 # Sert les fichiers du dossier "static/" (manifest.json, icônes PWA)
 # tels quels, à l'URL /app/static/<fichier>. Nécessaire pour que le
 # navigateur mobile trouve le manifest.json référencé dans app.py.

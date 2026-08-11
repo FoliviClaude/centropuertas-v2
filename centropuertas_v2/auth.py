@@ -91,5 +91,3 @@ def formulario_login() -> None:
                     "role": tecnico["role"],
                 }
                 st.rerun()
-
-    st.caption(t("auth.credenciales_prueba", login=db.LOGIN_PRUEBA, password=db.PASSWORD_PRUEBA))
