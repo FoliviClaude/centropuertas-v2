@@ -74,6 +74,18 @@ def _secciones_para(usuario: dict) -> list[tuple[str, str, object]]:
 
 def _configurar_pagina() -> None:
     st.set_page_config(
+        # Nettoyage de l'interface (Masquer header, footer et boutons)
+    st.markdown("""
+        <style>
+        header {visibility: hidden !important;}
+        [data-testid="stHeader"] {display: none !important;}
+        [data-testid="stToolbar"] {display: none !important;}
+        #MainMenu {visibility: hidden !important;}
+        footer {visibility: hidden !important;}
+        .stAppDeployButton {display: none !important;}
+        </style>
+    """, unsafe_allow_html=True)
+    )
         
         page_title="Centropuertas",
         page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "🚪",
@@ -113,18 +125,7 @@ def _ocultar_chrome_streamlit() -> None:
     la page) est en revanche un élément à part, sans aucun lien avec la
     sidebar -- son masquage est sûr.
     """
-    st.markdown(
-        """
-        <style>
-        #MainMenu {visibility: hidden;}
-        .stAppDeployButton {display: none;}
-        footer {display: none;}
-        div[data-testid="stStatusWidget"] {display: none;}
-        [data-testid="stDecoration"] {display: none;}
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+   
 
 
 def _pantalla_login() -> None:
