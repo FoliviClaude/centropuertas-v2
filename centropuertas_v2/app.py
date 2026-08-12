@@ -81,14 +81,19 @@ def _configurar_pagina() -> None:
     )
     # Nettoyage de l'interface (Masquer header, footer et boutons)
     
+# Nettoyage ciblé de l'interface (On garde l'en-tête pour le bouton menu mobile)
 st.markdown("""
         <style>
-        header {visibility: hidden !important;}
-        [data-testid="stHeader"] {display: none !important;}
+        /* On cible uniquement la barre d'outils de droite, le menu Streamlit et le bouton Deploy */
         [data-testid="stToolbar"] {display: none !important;}
-        #MainMenu {visibility: hidden !important;}
-        footer {visibility: hidden !important;}
+        #MainMenu {display: none !important;}
         .stAppDeployButton {display: none !important;}
+        
+        /* On masque le pied de page */
+        footer {display: none !important;}
+        
+        /* On rend le fond de l'en-tête transparent pour qu'il s'intègre parfaitement */
+        [data-testid="stHeader"] {background-color: transparent !important;}
         </style>
     """, unsafe_allow_html=True)
 
