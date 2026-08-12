@@ -82,21 +82,29 @@ def _configurar_pagina() -> None:
     # Nettoyage de l'interface (Masquer header, footer et boutons)
     
 # Nettoyage ciblé de l'interface (On garde l'en-tête pour le bouton menu mobile)
+# Le hack ultime pour masquer les pubs Streamlit Cloud tout en gardant le menu
 st.markdown("""
         <style>
-        /* On cible uniquement la barre d'outils de droite, le menu Streamlit et le bouton Deploy */
-        [data-testid="stToolbar"] {display: none !important;}
-        #MainMenu {display: none !important;}
-        .stAppDeployButton {display: none !important;}
+        /* 1. On rend TOUTE la barre du haut transparente et invisible (efface Fork et GitHub) */
+        [data-testid="stHeader"] {
+            visibility: hidden !important;
+            background: transparent !important;
+        }
         
-        /* On masque le pied de page */
-        footer {display: none !important;}
+        /* 2. On ressuscite UNIQUEMENT le bouton du menu (le hamburger) */
+        [data-testid="collapsedControl"] {
+            visibility: visible !important;
+            background-color: white !important; /* Pour qu'il se détache bien */
+            border-radius: 5px;
+            padding: 2px;
+        }
         
-        /* On rend le fond de l'en-tête transparent pour qu'il s'intègre parfaitement */
-        [data-testid="stHeader"] {background-color: transparent !important;}
+        /* 3. On masque le footer */
+        footer {
+            display: none !important;
+        }
         </style>
     """, unsafe_allow_html=True)
-
 def _ocultar_chrome_streamlit() -> None:
     """
     Masque les éléments d'interface propres à Streamlit (pas à
