@@ -73,70 +73,18 @@ def _secciones_para(usuario: dict) -> list[tuple[str, str, object]]:
 
 
 def _configurar_pagina() -> None:
- st.set_page_config(
+    st.set_page_config(
         page_title="Centropuertas",
         page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "🚪",
         layout="wide",
         initial_sidebar_state="expanded",
     )
-    # Nettoyage de l'interface (Masquer header, footer et boutons)
-    
-# Nettoyage ciblé de l'interface (On garde l'en-tête pour le bouton menu mobile)
-# Le hack ultime pour masquer les pubs Streamlit Cloud tout en gardant le menu
-st.markdown("""
-        <style>
-        /* 1. On rend TOUTE la barre du haut transparente et invisible (efface Fork et GitHub) */
-        [data-testid="stHeader"] {
-            visibility: hidden !important;
-            background: transparent !important;
-        }
-        
-        /* 2. On ressuscite UNIQUEMENT le bouton du menu (le hamburger) */
-        [data-testid="collapsedControl"] {
-            visibility: visible !important;
-            background-color: white !important; /* Pour qu'il se détache bien */
-            border-radius: 5px;
-            padding: 2px;
-        }
-        
-        /* 3. On masque le footer */
-        footer {
-            display: none !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-def _ocultar_chrome_streamlit() -> None:
-    """
-    Masque les éléments d'interface propres à Streamlit (pas à
-    l'application) pour un rendu plus épuré sur mobile.
-
-    Le bouton "Deploy" et le menu ⋮ (rerun, clear cache...) sont déjà
-    masqués de façon robuste par `client.toolbarMode = "minimal"` dans
-    .streamlit/config.toml -- un réglage officiel qui ne dépend pas de
-    la structure interne du DOM de Streamlit. #MainMenu/.stAppDeployButton
-    ci-dessous sont donc redondants avec ce réglage -- gardés seulement
-    en filet de sécurité si jamais toolbarMode était un jour réinitialisé
-    (ex. surcharge par Streamlit Community Cloud).
-
-    IMPORTANT -- NE JAMAIS masquer <header> ou [data-testid="stToolbar"]
-    en entier (ex. "header {display: none}"), même si ça revient souvent
-    dans des exemples trouvés en ligne (y compris des extraits fournis
-    par l'utilisateur à deux reprises) -- vérifié en conditions réelles
-    (viewport mobile, Playwright) : le bouton qui réouvre la barre
-    latérale une fois repliée (data-testid="stExpandSidebarButton") est
-    un DESCENDANT de stToolbar, lui-même dans <header>, dans cette
-    version de Streamlit. "display: none" sur un ancêtre est en plus
-    irrécupérable pour un descendant (contrairement à "visibility:
-    hidden", qu'un enfant peut réafficher) -- masquer l'un ou l'autre de
-    ces deux éléments rend ce bouton définitivement injoignable et
-    bloque toute navigation sur mobile une fois la sidebar repliée.
-    Testé et confirmé cassé avant d'écarter ces deux règles.
-
-    [data-testid="stDecoration"] (la fine barre colorée tout en haut de
-    la page) est en revanche un élément à part, sans aucun lien avec la
-    sidebar -- son masquage est sûr.
-    """
-   
+    # Le menu ⋮ (rerun/deploy/clear cache) est masqué de façon officielle
+    # via client.toolbarMode = "minimal" dans .streamlit/config.toml --
+    # aucun CSS injecté ici. Un hack CSS ciblant [data-testid="stHeader"]
+    # (essayé puis retiré à deux reprises) masquait aussi le bouton qui
+    # réouvre la sidebar sur mobile, ce bouton étant un descendant du
+    # header dans le DOM de Streamlit -- voir historique de conversation.
 
 
 def _pantalla_login() -> None:
@@ -272,7 +220,6 @@ def _barra_lateral(usuario: dict) -> str:
 
 def main() -> None:
     _configurar_pagina()
-    _ocultar_chrome_streamlit()
     db.init_db()
 
     usuario = auth.usuario_actual()

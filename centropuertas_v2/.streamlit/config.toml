@@ -22,6 +22,12 @@ gatherUsageStats = false
 # Community Cloud lui-même.
 [client]
 toolbarMode = "minimal"
+# "false" (booléen) est accepté mais déprécié dans cette version de
+# Streamlit (il correspond à l'ancien mode "stacktrace", qui affiche
+# encore le type et le message de l'exception). "none" est l'équivalent
+# moderne le plus proche de l'intention "ne rien montrer à l'écran" --
+# les détails complets restent quand même dans les logs du serveur.
+showErrorDetails = "none"
 
 # Sert les fichiers du dossier "static/" (manifest.json, icônes PWA)
 # tels quels, à l'URL /app/static/<fichier>. Nécessaire pour que le
