@@ -73,8 +73,13 @@ def _secciones_para(usuario: dict) -> list[tuple[str, str, object]]:
 
 
 def _configurar_pagina() -> None:
-    st.set_page_config(
-        # Nettoyage de l'interface (Masquer header, footer et boutons)
+  st.set_page_config(
+        page_title="Centropuertas",
+        page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "🚪",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
+    # Nettoyage de l'interface (Masquer header, footer et boutons)
     st.markdown("""
         <style>
         header {visibility: hidden !important;}
@@ -84,13 +89,7 @@ def _configurar_pagina() -> None:
         footer {visibility: hidden !important;}
         .stAppDeployButton {display: none !important;}
         </style>
-    """, unsafe_allow_html=True)       
-        page_title="Centropuertas",
-        page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "🚪",
-        layout="wide",
-        initial_sidebar_state="expanded",
-    )
-
+    """, unsafe_allow_html=True)
 
 def _ocultar_chrome_streamlit() -> None:
     """
