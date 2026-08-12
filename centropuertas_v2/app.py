@@ -80,11 +80,35 @@ def _configurar_pagina() -> None:
         initial_sidebar_state="expanded",
     )
     # Le menu ⋮ (rerun/deploy/clear cache) est masqué de façon officielle
-    # via client.toolbarMode = "minimal" dans .streamlit/config.toml --
-    # aucun CSS injecté ici. Un hack CSS ciblant [data-testid="stHeader"]
-    # (essayé puis retiré à deux reprises) masquait aussi le bouton qui
-    # réouvre la sidebar sur mobile, ce bouton étant un descendant du
-    # header dans le DOM de Streamlit -- voir historique de conversation.
+    # via client.toolbarMode = "minimal" dans .streamlit/config.toml.
+    # "minimal" masque les options ajoutées par l'app elle-même, mais
+    # PAS celles "définies en externe, par ex. via Streamlit Community
+    # Cloud" (voir la doc de ce réglage) -- sur un déploiement Cloud, les
+    # boutons "Fork"/GitHub/Deploy que la plateforme injecte restent donc
+    # visibles malgré toolbarMode. D'où ce complément CSS ciblé.
+    #
+    # [data-testid="stToolbar"] contient À LA FOIS ces boutons Cloud ET
+    # le bouton qui réouvre la sidebar une fois repliée sur mobile
+    # (data-testid="stExpandSidebarButton") -- vérifié en conditions
+    # réelles (Playwright, viewport mobile). Masquer stToolbar entier
+    # (ex. "display: none", essayé et retiré à plusieurs reprises) rend
+    # ce bouton injoignable. On utilise donc "visibility: hidden" sur
+    # stToolbar (jamais "display: none") PUIS on réaffiche explicitement
+    # stExpandSidebarButton avec "visibility: visible" -- un enfant peut
+    # annuler la visibilité masquée d'un ancêtre, contrairement à
+    # "display" qui ne le permet pas. Testé : le bouton Fork/GitHub
+    # simulé disparaît, le bouton de sidebar reste cliquable.
+    st.markdown(
+        """
+        <style>
+        [data-testid="stToolbar"] { visibility: hidden !important; }
+        [data-testid="stExpandSidebarButton"] { visibility: visible !important; }
+        .stAppDeployButton { display: none !important; }
+        footer { display: none !important; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def _pantalla_login() -> None:
