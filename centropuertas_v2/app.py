@@ -103,8 +103,18 @@ def _configurar_pagina() -> None:
         <style>
         [data-testid="stToolbar"] { visibility: hidden !important; }
         [data-testid="stExpandSidebarButton"] { visibility: visible !important; }
+        [data-testid="stAppDeployButton"] { visibility: hidden !important; display: none !important; }
         .stAppDeployButton { display: none !important; }
         footer { display: none !important; }
+        div[data-testid="stStatusWidget"] { display: none !important; }
+        /* Badge flottant "Hosted with Streamlit" injecté par Streamlit
+           Community Cloud (position fixe, bas à droite) -- sans rapport
+           avec stToolbar/la sidebar, ces noms de classe sont générés
+           par la plateforme Cloud (CSS modules) et peuvent changer lors
+           d'une mise à jour de Streamlit Cloud, contrairement aux
+           attributs data-testid ci-dessus qui sont plus stables. */
+        .viewerBadge_container { display: none !important; }
+        .styles_viewerBadge__AKyfc { display: none !important; }
         </style>
         """,
         unsafe_allow_html=True,
