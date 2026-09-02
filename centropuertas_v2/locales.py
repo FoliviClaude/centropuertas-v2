@@ -45,7 +45,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "common.ninguno": "(Ninguno)",
         "common.si": "Sí",
         "common.no": "No",
-
         # --- Autenticación -------------------------------------------------
         "auth.titulo": "Centropuertas",
         "auth.subtitulo": "Accede con tu usuario y contraseña de técnico.",
@@ -55,7 +54,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "auth.error_credenciales": "Usuario o contraseña incorrectos.",
         "auth.sesion_como": "👤 {nombre}",
         "auth.cerrar_sesion": "Cerrar sesión",
-
         # --- Navegación --------------------------------------------------
         "nav.nuevo_parte": "Nuevo Parte",
         "nav.referencias": "Referencias",
@@ -63,18 +61,15 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "nav.dashboard_admin": "Dashboard Global",
         "nav.historial": "Historial & PDF",
         "nav.ajustes": "Ajustes",
-
         # --- Tipos de jornada --------------------------------------------
         "tipo.Trabajo": "Trabajo",
         "tipo.Vacaciones": "Vacaciones",
         "tipo.Baja": "Baja",
         "tipo.Guardia": "Guardia",
         "tipo.Festivo": "Festivo",
-
         # --- Roles de usuario ----------------------------------------------
         "role.technicien": "Técnico",
         "role.admin": "Administrador",
-
         # --- Nuevo Parte ---------------------------------------------------
         "nuevo_parte.titulo": "Nuevo Parte Diario",
         "nuevo_parte.subtitulo": "Registra tu jornada de hoy: horas, dietas, cliente y trabajo realizado.",
@@ -98,8 +93,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "nuevo_parte.sin_colega": "(sin compañero)",
         "nuevo_parte.guardar_parte": "💾 Guardar parte del día",
         "nuevo_parte.guardado_ok": "Parte del {fecha} guardado correctamente.",
-        "nuevo_parte.sin_referencias_aviso": "Aún no has creado ningún {tipo} en \"Referencias\" — puedes dejarlo en blanco por ahora y añadirlo más tarde.",
-
+        "nuevo_parte.sin_referencias_aviso": 'Aún no has creado ningún {tipo} en "Referencias" — puedes dejarlo en blanco por ahora y añadirlo más tarde.',
         # --- Referencias -----------------------------------------------
         "referencias.titulo": "Referencias",
         "referencias.subtitulo": "Gestiona los clientes, tipos de intervención y compañeros usados en los partes.",
@@ -118,10 +112,9 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "referencias.creado_ok": "Añadido correctamente.",
         "referencias.actualizado_ok": "Actualizado correctamente.",
         "referencias.eliminado_ok": "Eliminado correctamente.",
-        "referencias.confirmar_eliminar_titulo": "¿Eliminar \"{nombre}\"?",
+        "referencias.confirmar_eliminar_titulo": '¿Eliminar "{nombre}"?',
         "referencias.confirmar_eliminar_texto": "Los partes ya guardados que lo usan no se borrarán, solo quedará esa referencia vacía.",
         "referencias.confirmar_eliminar_boton": "Sí, eliminar",
-
         # --- Dashboard ---------------------------------------------------
         "dashboard.titulo": "Dashboard Anual",
         "dashboard.subtitulo": "Totales automáticos del año: horas, extras, dietas y vacaciones.",
@@ -138,7 +131,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard.grafico_horas": "Horas trabajadas vs. horas extra por mes",
         "dashboard.grafico_dietas": "Evolución de dietas por mes",
         "dashboard.de_dias": "de {dias} días asignados al año",
-
         # --- Dashboard Global (admin) ---------------------------------------
         "dashboard_admin.titulo": "Dashboard Global",
         "dashboard_admin.subtitulo": "Totales de la empresa: todos los técnicos, año seleccionado.",
@@ -154,7 +146,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard_admin.nuevo_usuario_password": "Contraseña",
         "dashboard_admin.nuevo_usuario_role": "Rol",
         "dashboard_admin.crear_cuenta": "Crear cuenta",
-        "dashboard_admin.usuario_creado_ok": "Cuenta \"{login}\" creada correctamente.",
+        "dashboard_admin.usuario_creado_ok": 'Cuenta "{login}" creada correctamente.',
         "dashboard_admin.error_campos_vacios": "El nombre de usuario, el nombre mostrado y la contraseña no pueden estar vacíos.",
         "dashboard_admin.error_usuario_existe": "Ya existe un usuario con ese nombre.",
         "dashboard_admin.tabla_usuarios": "Usuarios actuales",
@@ -166,12 +158,11 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard_admin.eliminar_usuario": "🗑️ Eliminar cuenta",
         "dashboard_admin.eliminar_usuario_selector": "Selecciona una cuenta",
         "dashboard_admin.eliminar_usuario_boton": "Eliminar cuenta",
-        "dashboard_admin.eliminar_usuario_confirmar_titulo": "¿Eliminar la cuenta \"{nombre}\" ({login})?",
+        "dashboard_admin.eliminar_usuario_confirmar_titulo": '¿Eliminar la cuenta "{nombre}" ({login})?',
         "dashboard_admin.eliminar_usuario_confirmar_texto": "Esta acción no se puede deshacer. Los partes de trabajo ya guardados por esta persona NO se eliminarán, pero ya no podrá conectarse a la aplicación.",
         "dashboard_admin.eliminar_usuario_ok": "Cuenta eliminada.",
         "dashboard_admin.eliminar_usuario_error_ultimo_admin": "No se puede eliminar el último administrador activo.",
         "dashboard_admin.sin_otras_cuentas": "No hay otras cuentas que puedas eliminar.",
-
         # --- Historial -----------------------------------------------------
         "historial.titulo": "Historial & Informes",
         "historial.subtitulo": "Consulta, edita y exporta los partes guardados.",
@@ -193,7 +184,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "historial.horas": "Horas",
         "historial.h_extra_card": "+ {h:g} h extra",
         "historial.dietas_card": "{n:g} dieta(s)",
-
         # --- Ajustes -------------------------------------------------------
         "ajustes.titulo": "Ajustes",
         "ajustes.subtitulo": "Idioma, año en curso y configuración global.",
@@ -213,8 +203,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "ajustes.instalar_app_desc": "Instala CentroPuertas como aplicación en tu teléfono u ordenador para abrirla con un icono, sin pasar por el navegador.",
         "ajustes.instalar_app_boton": "Instalar aplicación",
         "ajustes.instalar_app_hecho": "Aplicación instalada.",
-        "ajustes.instalar_app_ios": "En iPhone/iPad (Safari): pulsa el botón Compartir y elige \"Añadir a pantalla de inicio\" — Safari no muestra un botón automático como Android.",
-
+        "ajustes.instalar_app_ios": 'En iPhone/iPad (Safari): pulsa el botón Compartir y elige "Añadir a pantalla de inicio" — Safari no muestra un botón automático como Android.',
         # --- PDF -----------------------------------------------------------
         "pdf.titulo_parte": "Parte de Trabajo Mensual",
         "pdf.resumen": "Resumen del mes",
@@ -230,15 +219,27 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "pdf.col_descripcion": "Trabajo realizado",
         "pdf.col_observaciones": "Observaciones",
         "pdf.col_colega": "Compañero",
-
         # --- Meses / días de la semana ------------------------------------
-        "mes.1": "Enero", "mes.2": "Febrero", "mes.3": "Marzo", "mes.4": "Abril",
-        "mes.5": "Mayo", "mes.6": "Junio", "mes.7": "Julio", "mes.8": "Agosto",
-        "mes.9": "Septiembre", "mes.10": "Octubre", "mes.11": "Noviembre", "mes.12": "Diciembre",
-        "dia.0": "Lunes", "dia.1": "Martes", "dia.2": "Miércoles", "dia.3": "Jueves",
-        "dia.4": "Viernes", "dia.5": "Sábado", "dia.6": "Domingo",
+        "mes.1": "Enero",
+        "mes.2": "Febrero",
+        "mes.3": "Marzo",
+        "mes.4": "Abril",
+        "mes.5": "Mayo",
+        "mes.6": "Junio",
+        "mes.7": "Julio",
+        "mes.8": "Agosto",
+        "mes.9": "Septiembre",
+        "mes.10": "Octubre",
+        "mes.11": "Noviembre",
+        "mes.12": "Diciembre",
+        "dia.0": "Lunes",
+        "dia.1": "Martes",
+        "dia.2": "Miércoles",
+        "dia.3": "Jueves",
+        "dia.4": "Viernes",
+        "dia.5": "Sábado",
+        "dia.6": "Domingo",
     },
-
     "fr": {
         "common.app_name": "Centropuertas",
         "common.app_tagline": "Partes de Travail",
@@ -253,7 +254,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "common.ninguno": "(Aucun)",
         "common.si": "Oui",
         "common.no": "Non",
-
         "auth.titulo": "Centropuertas",
         "auth.subtitulo": "Connecte-toi avec ton identifiant et ton mot de passe technicien.",
         "auth.usuario": "Identifiant",
@@ -262,24 +262,20 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "auth.error_credenciales": "Identifiant ou mot de passe incorrect.",
         "auth.sesion_como": "👤 {nombre}",
         "auth.cerrar_sesion": "Se déconnecter",
-
         "nav.nuevo_parte": "Nouveau Parte",
         "nav.referencias": "Références",
         "nav.dashboard": "Tableau de bord (Totaux)",
         "nav.dashboard_admin": "Tableau de bord Global",
         "nav.historial": "Historique & PDF",
         "nav.ajustes": "Paramètres",
-
         "tipo.Trabajo": "Travail",
         "tipo.Vacaciones": "Vacances",
         "tipo.Baja": "Arrêt maladie",
         "tipo.Guardia": "Garde",
         "tipo.Festivo": "Jour férié",
-
         # --- Roles de usuario ----------------------------------------------
         "role.technicien": "Technicien",
         "role.admin": "Administrateur",
-
         "nuevo_parte.titulo": "Nouveau Parte Journalier",
         "nuevo_parte.subtitulo": "Enregistre ta journée : heures, indemnités, client et travail effectué.",
         "nuevo_parte.fecha": "Date",
@@ -303,7 +299,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "nuevo_parte.guardar_parte": "💾 Enregistrer le parte du jour",
         "nuevo_parte.guardado_ok": "Parte du {fecha} enregistré avec succès.",
         "nuevo_parte.sin_referencias_aviso": "Tu n'as encore créé aucun {tipo} dans \"Références\" — tu peux laisser ce champ vide pour l'instant et l'ajouter plus tard.",
-
         "referencias.titulo": "Références",
         "referencias.subtitulo": "Gère les clients, types d'intervention et collègues utilisés dans les partes.",
         "referencias.tab_clientes": "Clients",
@@ -324,7 +319,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "referencias.confirmar_eliminar_titulo": "Supprimer « {nombre} » ?",
         "referencias.confirmar_eliminar_texto": "Les partes déjà enregistrés qui l'utilisent ne seront pas supprimés, seule cette référence deviendra vide.",
         "referencias.confirmar_eliminar_boton": "Oui, supprimer",
-
         "dashboard.titulo": "Tableau de bord Annuel",
         "dashboard.subtitulo": "Totaux automatiques de l'année : heures, heures sup, indemnités et vacances.",
         "dashboard.anio": "Année",
@@ -340,7 +334,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard.grafico_horas": "Heures travaillées vs. heures sup par mois",
         "dashboard.grafico_dietas": "Évolution des indemnités par mois",
         "dashboard.de_dias": "sur {dias} jours attribués par an",
-
         # --- Dashboard Global (admin) ---------------------------------------
         "dashboard_admin.titulo": "Tableau de bord Global",
         "dashboard_admin.subtitulo": "Totaux de l'entreprise : tous les techniciens, année sélectionnée.",
@@ -373,7 +366,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard_admin.eliminar_usuario_ok": "Compte supprimé.",
         "dashboard_admin.eliminar_usuario_error_ultimo_admin": "Impossible de supprimer le dernier administrateur actif.",
         "dashboard_admin.sin_otras_cuentas": "Il n'y a pas d'autre compte à supprimer.",
-
         "historial.titulo": "Historique & Rapports",
         "historial.subtitulo": "Consulte, modifie et exporte les partes enregistrés.",
         "historial.tab_mes": "Vue mensuelle",
@@ -394,7 +386,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "historial.horas": "Heures",
         "historial.h_extra_card": "+ {h:g} h sup",
         "historial.dietas_card": "{n:g} indemnité(s)",
-
         "ajustes.titulo": "Paramètres",
         "ajustes.subtitulo": "Langue, année en cours et configuration globale.",
         "ajustes.idioma": "Langue",
@@ -414,7 +405,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "ajustes.instalar_app_boton": "Installer l'application",
         "ajustes.instalar_app_hecho": "Application installée.",
         "ajustes.instalar_app_ios": "Sur iPhone/iPad (Safari) : appuie sur le bouton Partager puis choisis \"Sur l'écran d'accueil\" -- Safari n'affiche pas de bouton automatique comme Android.",
-
         "pdf.titulo_parte": "Parte de Travail Mensuel",
         "pdf.resumen": "Résumé du mois",
         "pdf.firma": "Signature du travailleur",
@@ -429,14 +419,26 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "pdf.col_descripcion": "Travail effectué",
         "pdf.col_observaciones": "Observations",
         "pdf.col_colega": "Collègue",
-
-        "mes.1": "Janvier", "mes.2": "Février", "mes.3": "Mars", "mes.4": "Avril",
-        "mes.5": "Mai", "mes.6": "Juin", "mes.7": "Juillet", "mes.8": "Août",
-        "mes.9": "Septembre", "mes.10": "Octobre", "mes.11": "Novembre", "mes.12": "Décembre",
-        "dia.0": "Lundi", "dia.1": "Mardi", "dia.2": "Mercredi", "dia.3": "Jeudi",
-        "dia.4": "Vendredi", "dia.5": "Samedi", "dia.6": "Dimanche",
+        "mes.1": "Janvier",
+        "mes.2": "Février",
+        "mes.3": "Mars",
+        "mes.4": "Avril",
+        "mes.5": "Mai",
+        "mes.6": "Juin",
+        "mes.7": "Juillet",
+        "mes.8": "Août",
+        "mes.9": "Septembre",
+        "mes.10": "Octobre",
+        "mes.11": "Novembre",
+        "mes.12": "Décembre",
+        "dia.0": "Lundi",
+        "dia.1": "Mardi",
+        "dia.2": "Mercredi",
+        "dia.3": "Jeudi",
+        "dia.4": "Vendredi",
+        "dia.5": "Samedi",
+        "dia.6": "Dimanche",
     },
-
     "en": {
         "common.app_name": "Centropuertas",
         "common.app_tagline": "Work Log",
@@ -451,7 +453,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "common.ninguno": "(None)",
         "common.si": "Yes",
         "common.no": "No",
-
         "auth.titulo": "Centropuertas",
         "auth.subtitulo": "Log in with your technician username and password.",
         "auth.usuario": "Username",
@@ -460,24 +461,20 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "auth.error_credenciales": "Incorrect username or password.",
         "auth.sesion_como": "👤 {nombre}",
         "auth.cerrar_sesion": "Log out",
-
         "nav.nuevo_parte": "New Entry",
         "nav.referencias": "References",
         "nav.dashboard": "Dashboard (Totals)",
         "nav.dashboard_admin": "Global Dashboard",
         "nav.historial": "History & PDF",
         "nav.ajustes": "Settings",
-
         "tipo.Trabajo": "Work",
         "tipo.Vacaciones": "Vacation",
         "tipo.Baja": "Sick leave",
         "tipo.Guardia": "On-call",
         "tipo.Festivo": "Holiday",
-
         # --- Roles de usuario ----------------------------------------------
         "role.technicien": "Technician",
         "role.admin": "Administrator",
-
         "nuevo_parte.titulo": "New Daily Entry",
         "nuevo_parte.subtitulo": "Log today's work day: hours, allowances, client and work performed.",
         "nuevo_parte.fecha": "Date",
@@ -500,8 +497,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "nuevo_parte.sin_colega": "(no colleague)",
         "nuevo_parte.guardar_parte": "💾 Save day entry",
         "nuevo_parte.guardado_ok": "Entry for {fecha} saved successfully.",
-        "nuevo_parte.sin_referencias_aviso": "You haven't created any {tipo} in \"References\" yet — you can leave this blank for now and add it later.",
-
+        "nuevo_parte.sin_referencias_aviso": 'You haven\'t created any {tipo} in "References" yet — you can leave this blank for now and add it later.',
         "referencias.titulo": "References",
         "referencias.subtitulo": "Manage the clients, intervention types and colleagues used in entries.",
         "referencias.tab_clientes": "Clients",
@@ -519,10 +515,9 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "referencias.creado_ok": "Added successfully.",
         "referencias.actualizado_ok": "Updated successfully.",
         "referencias.eliminado_ok": "Deleted successfully.",
-        "referencias.confirmar_eliminar_titulo": "Delete \"{nombre}\"?",
+        "referencias.confirmar_eliminar_titulo": 'Delete "{nombre}"?',
         "referencias.confirmar_eliminar_texto": "Entries that already use it will not be deleted, only this reference will become empty.",
         "referencias.confirmar_eliminar_boton": "Yes, delete",
-
         "dashboard.titulo": "Annual Dashboard",
         "dashboard.subtitulo": "Automatic yearly totals: hours, overtime, allowances and vacation.",
         "dashboard.anio": "Year",
@@ -538,7 +533,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard.grafico_horas": "Hours worked vs. overtime by month",
         "dashboard.grafico_dietas": "Allowances trend by month",
         "dashboard.de_dias": "out of {dias} days allotted per year",
-
         # --- Dashboard Global (admin) ---------------------------------------
         "dashboard_admin.titulo": "Global Dashboard",
         "dashboard_admin.subtitulo": "Company-wide totals: all technicians, selected year.",
@@ -554,7 +548,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard_admin.nuevo_usuario_password": "Password",
         "dashboard_admin.nuevo_usuario_role": "Role",
         "dashboard_admin.crear_cuenta": "Create account",
-        "dashboard_admin.usuario_creado_ok": "Account \"{login}\" created successfully.",
+        "dashboard_admin.usuario_creado_ok": 'Account "{login}" created successfully.',
         "dashboard_admin.error_campos_vacios": "Username, display name and password cannot be empty.",
         "dashboard_admin.error_usuario_existe": "A user with that name already exists.",
         "dashboard_admin.tabla_usuarios": "Current users",
@@ -566,12 +560,11 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "dashboard_admin.eliminar_usuario": "🗑️ Delete account",
         "dashboard_admin.eliminar_usuario_selector": "Select an account",
         "dashboard_admin.eliminar_usuario_boton": "Delete account",
-        "dashboard_admin.eliminar_usuario_confirmar_titulo": "Delete account \"{nombre}\" ({login})?",
+        "dashboard_admin.eliminar_usuario_confirmar_titulo": 'Delete account "{nombre}" ({login})?',
         "dashboard_admin.eliminar_usuario_confirmar_texto": "This cannot be undone. Work entries already saved by this person will NOT be deleted, but they will no longer be able to log in.",
         "dashboard_admin.eliminar_usuario_ok": "Account deleted.",
         "dashboard_admin.eliminar_usuario_error_ultimo_admin": "Cannot delete the last active administrator.",
         "dashboard_admin.sin_otras_cuentas": "There are no other accounts you can delete.",
-
         "historial.titulo": "History & Reports",
         "historial.subtitulo": "Browse, edit and export saved entries.",
         "historial.tab_mes": "Monthly view",
@@ -592,7 +585,6 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "historial.horas": "Hours",
         "historial.h_extra_card": "+ {h:g} h overtime",
         "historial.dietas_card": "{n:g} allowance(s)",
-
         "ajustes.titulo": "Settings",
         "ajustes.subtitulo": "Language, current year and global configuration.",
         "ajustes.idioma": "Language",
@@ -611,8 +603,7 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "ajustes.instalar_app_desc": "Install CentroPuertas as an app on your phone or computer, with its own icon, without going through the browser.",
         "ajustes.instalar_app_boton": "Install app",
         "ajustes.instalar_app_hecho": "App installed.",
-        "ajustes.instalar_app_ios": "On iPhone/iPad (Safari): tap the Share button and choose \"Add to Home Screen\" -- Safari doesn't show an automatic button like Android.",
-
+        "ajustes.instalar_app_ios": 'On iPhone/iPad (Safari): tap the Share button and choose "Add to Home Screen" -- Safari doesn\'t show an automatic button like Android.',
         "pdf.titulo_parte": "Monthly Work Report",
         "pdf.resumen": "Month summary",
         "pdf.firma": "Employee signature",
@@ -627,12 +618,25 @@ TRADUCCIONES: dict[str, dict[str, str]] = {
         "pdf.col_descripcion": "Work performed",
         "pdf.col_observaciones": "Observations",
         "pdf.col_colega": "Colleague",
-
-        "mes.1": "January", "mes.2": "February", "mes.3": "March", "mes.4": "April",
-        "mes.5": "May", "mes.6": "June", "mes.7": "July", "mes.8": "August",
-        "mes.9": "September", "mes.10": "October", "mes.11": "November", "mes.12": "December",
-        "dia.0": "Monday", "dia.1": "Tuesday", "dia.2": "Wednesday", "dia.3": "Thursday",
-        "dia.4": "Friday", "dia.5": "Saturday", "dia.6": "Sunday",
+        "mes.1": "January",
+        "mes.2": "February",
+        "mes.3": "March",
+        "mes.4": "April",
+        "mes.5": "May",
+        "mes.6": "June",
+        "mes.7": "July",
+        "mes.8": "August",
+        "mes.9": "September",
+        "mes.10": "October",
+        "mes.11": "November",
+        "mes.12": "December",
+        "dia.0": "Monday",
+        "dia.1": "Tuesday",
+        "dia.2": "Wednesday",
+        "dia.3": "Thursday",
+        "dia.4": "Friday",
+        "dia.5": "Saturday",
+        "dia.6": "Sunday",
     },
 }
 

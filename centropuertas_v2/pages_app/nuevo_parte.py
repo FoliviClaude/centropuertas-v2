@@ -27,8 +27,9 @@ def render() -> None:
     # par l'utilisateur (voir database.guardar_parte pour le pourquoi).
     technician_name = auth.nombre_tecnico_actual()
 
-    fecha = st.date_input(t("nuevo_parte.fecha"), value=dt.date.today(),
-                           format="DD/MM/YYYY", key="np_fecha")
+    fecha = st.date_input(
+        t("nuevo_parte.fecha"), value=dt.date.today(), format="DD/MM/YYYY", key="np_fecha"
+    )
     fecha_iso = fecha.isoformat()
     parte_existente = db.get_parte_por_fecha(fecha_iso, technician_name)
 
@@ -36,11 +37,15 @@ def render() -> None:
         st.info(t("nuevo_parte.ya_existe", fecha=fecha.strftime("%d/%m/%Y")), icon="ℹ️")
 
     if not db.get_clients():
-        st.caption("💡 " + t("nuevo_parte.sin_referencias_aviso", tipo=t("referencias.tab_clientes")))
+        st.caption(
+            "💡 " + t("nuevo_parte.sin_referencias_aviso", tipo=t("referencias.tab_clientes"))
+        )
     if not db.get_interventions_types():
         st.caption("💡 " + t("nuevo_parte.sin_referencias_aviso", tipo=t("referencias.tab_tipos")))
     if not db.get_collegues():
-        st.caption("💡 " + t("nuevo_parte.sin_referencias_aviso", tipo=t("referencias.tab_colegas")))
+        st.caption(
+            "💡 " + t("nuevo_parte.sin_referencias_aviso", tipo=t("referencias.tab_colegas"))
+        )
 
     with st.container(border=True):
         valores = campos_parte(parte_existente, key_prefix="np")
