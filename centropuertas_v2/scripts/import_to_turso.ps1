@@ -1,7 +1,7 @@
 <#
     import_to_turso.ps1
     ====================
-    Importe data\centropuertas.db dans Turso via l'API Platform HTTP
+    Importe data\db\centropuertas.db dans Turso via l'API Platform HTTP
     (aucune installation de CLI necessaire -- juste curl.exe, deja
     fourni par Windows 10/11).
 
@@ -20,7 +20,7 @@
         .\scripts\import_to_turso.ps1
 
     Le token propre a la base nouvellement creee est ecrit dans
-    data\turso_token.txt (deja exclu de git par .gitignore) -- ne le
+    data\db\turso_token.txt (deja exclu de git par .gitignore) -- ne le
     partage jamais, c'est l'equivalent d'un mot de passe pour accéder
     a toutes les donnees de tous les techniciens.
 #>
@@ -36,8 +36,8 @@ if (-not $env:TURSO_ORG_SLUG) {
 
 $DbName = "centropuertas"
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
-$DbFile = Join-Path $ProjectRoot "data\centropuertas.db"
-$TokenFile = Join-Path $ProjectRoot "data\turso_token.txt"
+$DbFile = Join-Path $ProjectRoot "data\db\centropuertas.db"
+$TokenFile = Join-Path $ProjectRoot "data\db\turso_token.txt"
 
 if (-not (Test-Path $DbFile)) {
     throw "Base introuvable : $DbFile"
