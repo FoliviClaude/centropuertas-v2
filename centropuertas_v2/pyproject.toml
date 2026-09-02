@@ -12,3 +12,8 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+# E501 (ligne trop longue) desactive : avec black, ruff ne doit pas
+# dupliquer la mise en forme du code -- et chaines de traduction,
+# requetes SQL et docstrings ne peuvent de toute facon pas etre
+# raccourcis par un formateur. Pratique standard black+ruff.
+ignore = ["E501"]

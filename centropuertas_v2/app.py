@@ -215,8 +215,11 @@ def _barra_lateral(usuario: dict) -> str:
         etiquetas = list(IDIOMAS_DISPONIBLES.values())
         idioma_actual = get_idioma_activo()
         idioma_elegido = st.selectbox(
-            "🌐", etiquetas, index=codigos.index(idioma_actual),
-            label_visibility="collapsed", key="selector_idioma_sidebar",
+            "🌐",
+            etiquetas,
+            index=codigos.index(idioma_actual),
+            label_visibility="collapsed",
+            key="selector_idioma_sidebar",
         )
         codigo_elegido = codigos[etiquetas.index(idioma_elegido)]
         if codigo_elegido != idioma_actual:
@@ -241,7 +244,10 @@ def _barra_lateral(usuario: dict) -> str:
             etiqueta = t(clave_etiqueta)
             es_activa = st.session_state["seccion_activa"] == clave_etiqueta
             if st.button(
-                etiqueta, key=f"nav_{clave_etiqueta}", icon=icono, width="stretch",
+                etiqueta,
+                key=f"nav_{clave_etiqueta}",
+                icon=icono,
+                width="stretch",
                 type="primary" if es_activa else "secondary",
             ):
                 st.session_state["seccion_activa"] = clave_etiqueta

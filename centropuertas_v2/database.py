@@ -54,7 +54,6 @@ from __future__ import annotations
 import hashlib
 import hmac
 import os
-from typing import Optional
 
 import libsql_client
 import streamlit as st
@@ -123,6 +122,7 @@ _SQL_TABLA_PARTS = """
 # ET inutile : `ClientSync` gère déjà ses propres appels concurrents).
 # ----------------------------------------------------------------------
 
+
 @st.cache_resource(show_spinner=False)
 def _client() -> libsql_client.ClientSync:
     """
@@ -166,8 +166,7 @@ def init_db() -> None:
     client = _client()
 
     # --- clients ---------------------------------------------------
-    client.execute(
-        """
+    client.execute("""
         CREATE TABLE IF NOT EXISTS clients (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL UNIQUE,
@@ -175,35 +174,29 @@ def init_db() -> None:
             telefono TEXT DEFAULT '',
             notas TEXT DEFAULT ''
         )
-        """
-    )
+        """)
 
     # --- interventions_types ----------------------------------------
-    client.execute(
-        """
+    client.execute("""
         CREATE TABLE IF NOT EXISTS interventions_types (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL UNIQUE
         )
-        """
-    )
+        """)
 
     # --- collegues ---------------------------------------------------
-    client.execute(
-        """
+    client.execute("""
         CREATE TABLE IF NOT EXISTS collegues (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL UNIQUE
         )
-        """
-    )
+        """)
 
     # --- technicians (comptes de connexion) -----------------------------
     # Mot de passe JAMAIS stocké en clair : PBKDF2-HMAC-SHA256 avec un
     # sel aléatoire propre à chaque compte (voir hash_password ci-dessous).
     # "role" détermine l'accès admin vs technicien (voir app.py).
-    client.execute(
-        """
+    client.execute("""
         CREATE TABLE IF NOT EXISTS technicians (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             login TEXT NOT NULL UNIQUE,
@@ -214,14 +207,17 @@ def init_db() -> None:
             activo INTEGER NOT NULL DEFAULT 1,
             creado_en TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
         )
-        """
-    )
+        """)
     # Migration légère : ajoute "role" si la table existait déjà avant
     # son introduction (sinon "CREATE TABLE IF NOT EXISTS" ne la crée
     # pas sur une table déjà existante).
-    _asegurar_columnas(client, "technicians", {
-        "role": "TEXT NOT NULL DEFAULT 'technicien'",
-    })
+    _asegurar_columnas(
+        client,
+        "technicians",
+        {
+            "role": "TEXT NOT NULL DEFAULT 'technicien'",
+        },
+    )
 
     # --- configurations ------------------------------------------------
     # Ligne unique (id=1) de paramètres globaux de l'application. Créée
@@ -237,8 +233,7 @@ def init_db() -> None:
     # communs à tout le monde tant que cette table n'est pas, elle
     # aussi, déclinée par technicien -- hors du périmètre demandé
     # ici, mais à garder en tête pour une prochaine étape.
-    client.execute(
-        """
+    client.execute("""
         CREATE TABLE IF NOT EXISTS configurations (
             id INTEGER PRIMARY KEY CHECK (id = 1),
             idioma TEXT NOT NULL DEFAULT 'es',
@@ -249,15 +244,18 @@ def init_db() -> None:
             empresa TEXT NOT NULL DEFAULT 'Centropuertas',
             nif_cif TEXT NOT NULL DEFAULT ''
         )
-        """
-    )
+        """)
     client.execute(
         "INSERT OR IGNORE INTO configurations (id, anio_actual) VALUES (1, ?)",
         [__import__("datetime").date.today().year],
     )
-    _asegurar_columnas(client, "configurations", {
-        "nif_cif": "TEXT NOT NULL DEFAULT ''",
-    })
+    _asegurar_columnas(
+        client,
+        "configurations",
+        {
+            "nif_cif": "TEXT NOT NULL DEFAULT ''",
+        },
+    )
 
     # --- parts_de_travail ----------------------------------------------
     # "ON DELETE SET NULL" : si on supprime un client/type/collègue
@@ -281,13 +279,13 @@ def init_db() -> None:
     _migrar_parts_de_travail_multiusuario(client)
 
     client.execute("CREATE INDEX IF NOT EXISTS idx_parts_fecha ON parts_de_travail(fecha)")
-    client.execute("CREATE INDEX IF NOT EXISTS idx_parts_technician ON parts_de_travail(technician_name)")
+    client.execute(
+        "CREATE INDEX IF NOT EXISTS idx_parts_technician ON parts_de_travail(technician_name)"
+    )
 
     # Catalogue par défaut des types d'intervention (une seule fois).
     for nombre in TIPOS_INTERVENCION_DEFECTO:
-        client.execute(
-            "INSERT OR IGNORE INTO interventions_types (nombre) VALUES (?)", [nombre]
-        )
+        client.execute("INSERT OR IGNORE INTO interventions_types (nombre) VALUES (?)", [nombre])
 
     # Bootstrap : s'il n'existe encore AUCUN compte technicien (base
     # neuve), on en crée un de test avec le rôle 'admin' -- sans ça,
@@ -303,9 +301,13 @@ def init_db() -> None:
         )
 
 
-def _asegurar_columnas(client: libsql_client.ClientSync, tabla: str, columnas: dict[str, str]) -> None:
+def _asegurar_columnas(
+    client: libsql_client.ClientSync, tabla: str, columnas: dict[str, str]
+) -> None:
     """Ajoute des colonnes manquantes à une table déjà existante (migration légère)."""
-    columnas_actuales = {fila["name"] for fila in client.execute(f"PRAGMA table_info({tabla})").rows}
+    columnas_actuales = {
+        fila["name"] for fila in client.execute(f"PRAGMA table_info({tabla})").rows
+    }
     for nombre, definicion_sql in columnas.items():
         if nombre not in columnas_actuales:
             client.execute(f"ALTER TABLE {tabla} ADD COLUMN {nombre} {definicion_sql}")
@@ -336,7 +338,9 @@ def _migrar_parts_de_travail_multiusuario(client: libsql_client.ClientSync) -> N
         return  # table neuve (rien à migrer) ou déjà migrée
 
     fila_config = _fetchone("SELECT nombre_trabajador FROM configurations WHERE id = 1")
-    nombre_historico = ((fila_config["nombre_trabajador"] if fila_config else "") or "Sin asignar").strip()
+    nombre_historico = (
+        (fila_config["nombre_trabajador"] if fila_config else "") or "Sin asignar"
+    ).strip()
 
     with client.transaction() as tx:
         tx.execute("ALTER TABLE parts_de_travail RENAME TO parts_de_travail_old")
@@ -391,8 +395,10 @@ def _verificar_password(password: str, hash_guardado_hex: str, salt_hex: str) ->
 # Technicians (comptes de connexion + rôle)
 # ----------------------------------------------------------------------
 
-def crear_technician(login: str, password: str, nombre_display: str,
-                      role: str = "technicien") -> None:
+
+def crear_technician(
+    login: str, password: str, nombre_display: str, role: str = "technicien"
+) -> None:
     """Crée un compte technicien. `login` doit être unique (insensible à la casse)."""
     if role not in ROLES_DISPONIBLES:
         raise ValueError(f"role invalide : {role!r} (attendu : {ROLES_DISPONIBLES})")
@@ -417,17 +423,16 @@ def get_technicians_resumen() -> list[Row]:
     de code qui le manipule, moins il y a de surface pour une fuite
     accidentelle (log, capture d'écran d'un dataframe de debug...).
     """
-    return _fetchall(
-        """SELECT id, login, nombre_display, role, activo, creado_en
-           FROM technicians ORDER BY nombre_display COLLATE NOCASE"""
-    )
+    return _fetchall("""SELECT id, login, nombre_display, role, activo, creado_en
+           FROM technicians ORDER BY nombre_display COLLATE NOCASE""")
 
 
 def technician_login_existe(login: str) -> bool:
     """Vrai si ce login (insensible à la casse) est déjà pris -- pour un message d'erreur clair avant de tenter la création."""
-    return _fetchone(
-        "SELECT 1 AS x FROM technicians WHERE login = ?", [login.strip().lower()]
-    ) is not None
+    return (
+        _fetchone("SELECT 1 AS x FROM technicians WHERE login = ?", [login.strip().lower()])
+        is not None
+    )
 
 
 def actualizar_role_technician(technician_id: int, role: str) -> None:
@@ -468,7 +473,7 @@ def eliminar_technician(technician_id: int) -> None:
     _execute("DELETE FROM technicians WHERE id = ?", [technician_id])
 
 
-def verificar_credenciales(login: str, password: str) -> Optional[Row]:
+def verificar_credenciales(login: str, password: str) -> Row | None:
     """
     Vérifie login + mot de passe. Renvoie la ligne "technicians"
     correspondante (avec sa colonne `role`) si valides et le compte
@@ -494,16 +499,21 @@ def verificar_credenciales(login: str, password: str) -> Optional[Row]:
 # Configuration globale
 # ----------------------------------------------------------------------
 
+
 def get_configuracion() -> Row:
     """Retourne la ligne unique de configuration globale (id=1)."""
     return _fetchone("SELECT * FROM configurations WHERE id = 1")
 
 
-def actualizar_configuracion(idioma: str, anio_actual: int,
-                              horas_convenio_anual: float,
-                              dias_vacaciones_anuales: int,
-                              nombre_trabajador: str, empresa: str,
-                              nif_cif: str) -> None:
+def actualizar_configuracion(
+    idioma: str,
+    anio_actual: int,
+    horas_convenio_anual: float,
+    dias_vacaciones_anuales: int,
+    nombre_trabajador: str,
+    empresa: str,
+    nif_cif: str,
+) -> None:
     """Met à jour la configuration globale (toujours la ligne id=1)."""
     _execute(
         """
@@ -513,8 +523,15 @@ def actualizar_configuracion(idioma: str, anio_actual: int,
                nif_cif = ?
          WHERE id = 1
         """,
-        [idioma, anio_actual, horas_convenio_anual, dias_vacaciones_anuales,
-         nombre_trabajador, empresa, nif_cif],
+        [
+            idioma,
+            anio_actual,
+            horas_convenio_anual,
+            dias_vacaciones_anuales,
+            nombre_trabajador,
+            empresa,
+            nif_cif,
+        ],
     )
 
 
@@ -527,6 +544,7 @@ def actualizar_idioma(idioma: str) -> None:
 # Referencias : clients
 # ----------------------------------------------------------------------
 
+
 def get_clients() -> list[Row]:
     return _fetchall("SELECT * FROM clients ORDER BY nombre COLLATE NOCASE")
 
@@ -538,8 +556,9 @@ def crear_client(nombre: str, direccion: str, telefono: str, notas: str) -> None
     )
 
 
-def actualizar_client(client_id: int, nombre: str, direccion: str,
-                       telefono: str, notas: str) -> None:
+def actualizar_client(
+    client_id: int, nombre: str, direccion: str, telefono: str, notas: str
+) -> None:
     _execute(
         """UPDATE clients SET nombre = ?, direccion = ?, telefono = ?, notas = ?
            WHERE id = ?""",
@@ -554,6 +573,7 @@ def eliminar_client(client_id: int) -> None:
 # ----------------------------------------------------------------------
 # Referencias : types d'intervention
 # ----------------------------------------------------------------------
+
 
 def get_interventions_types() -> list[Row]:
     return _fetchall("SELECT * FROM interventions_types ORDER BY nombre COLLATE NOCASE")
@@ -574,6 +594,7 @@ def eliminar_intervention_type(tipo_id: int) -> None:
 # ----------------------------------------------------------------------
 # Referencias : collègues
 # ----------------------------------------------------------------------
+
 
 def get_collegues() -> list[Row]:
     return _fetchall("SELECT * FROM collegues ORDER BY nombre COLLATE NOCASE")
@@ -611,11 +632,19 @@ _SELECT_PARTE_CON_NOMBRES = """
 """
 
 
-def guardar_parte(fecha: str, technician_name: str, tipo_jornada: str,
-                   horas_normales: float, horas_extra: float, dietas: float,
-                   id_client: Optional[int], id_intervention: Optional[int],
-                   descripcion: str, observaciones: str,
-                   id_collegue: Optional[int]) -> None:
+def guardar_parte(
+    fecha: str,
+    technician_name: str,
+    tipo_jornada: str,
+    horas_normales: float,
+    horas_extra: float,
+    dietas: float,
+    id_client: int | None,
+    id_intervention: int | None,
+    descripcion: str,
+    observaciones: str,
+    id_collegue: int | None,
+) -> None:
     """
     Crée ou met à jour (UPSERT par date + technicien) le parte d'un
     jour donné pour CE technicien. `technician_name` doit toujours être
@@ -642,8 +671,19 @@ def guardar_parte(fecha: str, technician_name: str, tipo_jornada: str,
             id_collegue = excluded.id_collegue,
             actualizado_en = datetime('now', 'localtime')
         """,
-        [fecha, technician_name, tipo_jornada, horas_normales, horas_extra, dietas,
-         id_client, id_intervention, descripcion, observaciones, id_collegue],
+        [
+            fecha,
+            technician_name,
+            tipo_jornada,
+            horas_normales,
+            horas_extra,
+            dietas,
+            id_client,
+            id_intervention,
+            descripcion,
+            observaciones,
+            id_collegue,
+        ],
     )
 
 
@@ -670,10 +710,14 @@ def get_partes_mes(anio: int, mes: int, technician_name: str) -> list[Row]:
     )
 
 
-def buscar_partes(technician_name: str, anio: int | None = None, texto: str = "",
-                   id_client: int | None = None,
-                   id_collegue: int | None = None,
-                   id_intervention: int | None = None) -> list[Row]:
+def buscar_partes(
+    technician_name: str,
+    anio: int | None = None,
+    texto: str = "",
+    id_client: int | None = None,
+    id_collegue: int | None = None,
+    id_intervention: int | None = None,
+) -> list[Row]:
     """
     Recherche flexible dans l'historique du technicien connecté (par
     année, mot-clé dans description/observations, et/ou client/
@@ -708,6 +752,7 @@ def buscar_partes(technician_name: str, anio: int | None = None, texto: str = ""
 # ----------------------------------------------------------------------
 # Agrégats pour le Dashboard (personnel, filtré par technician_name)
 # ----------------------------------------------------------------------
+
 
 def get_anios_disponibles(technician_name: str) -> list[int]:
     filas = _fetchall(
@@ -760,6 +805,7 @@ def get_totales_por_mes(anio: int, technician_name: str) -> list[dict]:
 # jamais utilisés par les écrans accessibles aux techniciens -- voir
 # app.py pour le contrôle d'accès par rôle).
 # ----------------------------------------------------------------------
+
 
 def get_anios_disponibles_global() -> list[int]:
     filas = _fetchall(
@@ -816,6 +862,7 @@ def get_totales_por_technician(anio: int) -> list[dict]:
 # encore aucun technicien -- sinon personne ne pourrait se connecter.
 # ----------------------------------------------------------------------
 
+
 def poblar_datos_prueba() -> None:
     """
     Remplit la base avec deux comptes techniciens, quelques clients et
@@ -839,7 +886,12 @@ def poblar_datos_prueba() -> None:
 
     clientes_prueba = [
         ("Comunidad Vecinos Los Almendros", "Calle Olivo 14, Sevilla", "954 111 222", ""),
-        ("Nave Industrial Polígono Sur", "Polígono Sur, Nave 12, Sevilla", "954 333 444", "Acceso solo en horario de mañana"),
+        (
+            "Nave Industrial Polígono Sur",
+            "Polígono Sur, Nave 12, Sevilla",
+            "954 333 444",
+            "Acceso solo en horario de mañana",
+        ),
         ("Hotel Playa Dorada", "Paseo Marítimo 3, Málaga", "952 555 666", ""),
     ]
     colegas_prueba = ["Antonio", "Manuel"]
@@ -859,21 +911,112 @@ def poblar_datos_prueba() -> None:
     # (fecha, technicien_proprietaire, tipo, horas, extra, dietas, cliente,
     #  tipo_intervencion, descripcion, observaciones, colega_tag)
     partes_prueba = [
-        ("2026-06-02", "Antonio", "Trabajo", 8, 0, 1, "Comunidad Vecinos Los Almendros", "Instalación de puerta automática", "Instalación de puerta seccional en garaje comunitario.", "Sin incidencias.", "Manuel"),
-        ("2026-06-03", "Antonio", "Trabajo", 8, 1, 1, "Nave Industrial Polígono Sur", "Mantenimiento mecánico", "Mantenimiento preventivo de puerta corredera industrial.", "Motor con ruido anómalo, pendiente de recambio.", None),
-        ("2026-06-05", "Manuel", "Trabajo", 7, 0, 0, "Hotel Playa Dorada", "Ajuste/Cableado de sensores GEZE", "Ajuste de fotocélulas GEZE en puerta automática de acceso.", "Cables de los sensores GEZE cruzados en la instalación anterior.", None),
-        ("2026-06-08", "Antonio", "Guardia", 4, 0, 0, None, None, "Guardia de fin de semana, sin avisos.", "", None),
+        (
+            "2026-06-02",
+            "Antonio",
+            "Trabajo",
+            8,
+            0,
+            1,
+            "Comunidad Vecinos Los Almendros",
+            "Instalación de puerta automática",
+            "Instalación de puerta seccional en garaje comunitario.",
+            "Sin incidencias.",
+            "Manuel",
+        ),
+        (
+            "2026-06-03",
+            "Antonio",
+            "Trabajo",
+            8,
+            1,
+            1,
+            "Nave Industrial Polígono Sur",
+            "Mantenimiento mecánico",
+            "Mantenimiento preventivo de puerta corredera industrial.",
+            "Motor con ruido anómalo, pendiente de recambio.",
+            None,
+        ),
+        (
+            "2026-06-05",
+            "Manuel",
+            "Trabajo",
+            7,
+            0,
+            0,
+            "Hotel Playa Dorada",
+            "Ajuste/Cableado de sensores GEZE",
+            "Ajuste de fotocélulas GEZE en puerta automática de acceso.",
+            "Cables de los sensores GEZE cruzados en la instalación anterior.",
+            None,
+        ),
+        (
+            "2026-06-08",
+            "Antonio",
+            "Guardia",
+            4,
+            0,
+            0,
+            None,
+            None,
+            "Guardia de fin de semana, sin avisos.",
+            "",
+            None,
+        ),
         ("2026-06-15", "Manuel", "Vacaciones", 0, 0, 0, None, None, "", "", None),
-        ("2026-07-02", "Manuel", "Trabajo", 8, 1, 1, "Hotel Playa Dorada", "Reset de placa de control", "Reset de placa de control y recalibración de encoder.", "Encoder descalibrado, recalibrado en la misma visita.", None),
-        ("2026-07-20", "Antonio", "Trabajo", 8, 3, 1, "Nave Industrial Polígono Sur", "Resolución de averías", "Avería urgente: puerta bloqueada en apertura.", "Cables de sensores GEZE cruzados de nuevo, se recomienda revisar el cableado a fondo.", "Manuel"),
+        (
+            "2026-07-02",
+            "Manuel",
+            "Trabajo",
+            8,
+            1,
+            1,
+            "Hotel Playa Dorada",
+            "Reset de placa de control",
+            "Reset de placa de control y recalibración de encoder.",
+            "Encoder descalibrado, recalibrado en la misma visita.",
+            None,
+        ),
+        (
+            "2026-07-20",
+            "Antonio",
+            "Trabajo",
+            8,
+            3,
+            1,
+            "Nave Industrial Polígono Sur",
+            "Resolución de averías",
+            "Avería urgente: puerta bloqueada en apertura.",
+            "Cables de sensores GEZE cruzados de nuevo, se recomienda revisar el cableado a fondo.",
+            "Manuel",
+        ),
     ]
 
-    for (fecha, tecnico, tipo, horas, extra, dietas, cliente, tipo_interv, desc, obs, colega) in partes_prueba:
+    for (
+        fecha,
+        tecnico,
+        tipo,
+        horas,
+        extra,
+        dietas,
+        cliente,
+        tipo_interv,
+        desc,
+        obs,
+        colega,
+    ) in partes_prueba:
         guardar_parte(
-            fecha=fecha, technician_name=tecnico, tipo_jornada=tipo,
-            horas_normales=horas, horas_extra=extra, dietas=dietas,
-            id_client=clientes.get(cliente), id_intervention=tipos.get(tipo_interv),
-            descripcion=desc, observaciones=obs, id_collegue=colegas.get(colega),
+            fecha=fecha,
+            technician_name=tecnico,
+            tipo_jornada=tipo,
+            horas_normales=horas,
+            horas_extra=extra,
+            dietas=dietas,
+            id_client=clientes.get(cliente),
+            id_intervention=tipos.get(tipo_interv),
+            descripcion=desc,
+            observaciones=obs,
+            id_collegue=colegas.get(colega),
         )
 
 

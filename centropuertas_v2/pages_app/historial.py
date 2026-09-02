@@ -61,7 +61,9 @@ def _tarjeta_parte(parte: Row, key_prefix: str, technician_name: str) -> None:
         c1, c2 = st.columns([3, 1])
         with c1:
             dia_semana = t_dia_semana(fecha.weekday())
-            st.markdown(f"**📅 {dia_semana} {fecha.strftime('%d/%m/%Y')}** · {t_tipo_jornada(parte['tipo_jornada'])}")
+            st.markdown(
+                f"**📅 {dia_semana} {fecha.strftime('%d/%m/%Y')}** · {t_tipo_jornada(parte['tipo_jornada'])}"
+            )
             if parte["cliente_nombre"]:
                 linea = f"🏢 **{parte['cliente_nombre']}**"
                 if parte["intervencion_nombre"]:
@@ -79,9 +81,13 @@ def _tarjeta_parte(parte: Row, key_prefix: str, technician_name: str) -> None:
                 st.caption(t("historial.h_extra_card", h=parte["horas_extra"]))
             if parte["dietas"]:
                 st.caption(t("historial.dietas_card", n=parte["dietas"]))
-            if st.button(t("common.editar"), key=f"edit_{key_prefix}_{parte['id']}", width="stretch"):
+            if st.button(
+                t("common.editar"), key=f"edit_{key_prefix}_{parte['id']}", width="stretch"
+            ):
                 _dialogo_editar(parte, technician_name)
-            if st.button(t("common.eliminar"), key=f"del_{key_prefix}_{parte['id']}", width="stretch"):
+            if st.button(
+                t("common.eliminar"), key=f"del_{key_prefix}_{parte['id']}", width="stretch"
+            ):
                 db.eliminar_parte(parte["id"], technician_name)
                 st.rerun()
 
@@ -91,23 +97,32 @@ def render() -> None:
 
     technician_name = auth.nombre_tecnico_actual()
 
-    tab_mes, tab_buscador, tab_conocimiento = st.tabs([
-        t("historial.tab_mes"), t("historial.tab_buscador"), t("historial.tab_conocimiento"),
-    ])
+    tab_mes, tab_buscador, tab_conocimiento = st.tabs(
+        [
+            t("historial.tab_mes"),
+            t("historial.tab_buscador"),
+            t("historial.tab_conocimiento"),
+        ]
+    )
 
     # ------------------------------------------------------------------
     with tab_mes:
         hoy = dt.date.today()
-        anios_disponibles = sorted(set(db.get_anios_disponibles(technician_name) + [hoy.year]), reverse=True)
+        anios_disponibles = sorted(
+            set(db.get_anios_disponibles(technician_name) + [hoy.year]), reverse=True
+        )
 
         col_anio, col_mes = st.columns(2)
         anio = col_anio.selectbox(
-            t("historial.filtro_anio"), anios_disponibles,
+            t("historial.filtro_anio"),
+            anios_disponibles,
             index=anios_disponibles.index(hoy.year) if hoy.year in anios_disponibles else 0,
         )
         mes = col_mes.selectbox(
-            t("historial.mes"), options=list(range(1, 13)),
-            index=hoy.month - 1, format_func=t_mes,
+            t("historial.mes"),
+            options=list(range(1, 13)),
+            index=hoy.month - 1,
+            format_func=t_mes,
         )
 
         partes_mes = db.get_partes_mes(anio, mes, technician_name)
@@ -129,18 +144,26 @@ def render() -> None:
             col_pdf, col_excel = st.columns(2)
             with col_pdf:
                 pdf_bytes = generar_pdf_mensual(
-                    anio, mes, config["nombre_trabajador"], partes_mes,
-                    empresa=config["empresa"], nif_cif=config["nif_cif"],
+                    anio,
+                    mes,
+                    config["nombre_trabajador"],
+                    partes_mes,
+                    empresa=config["empresa"],
+                    nif_cif=config["nif_cif"],
                 )
                 st.download_button(
-                    t("historial.generar_informe"), data=pdf_bytes,
+                    t("historial.generar_informe"),
+                    data=pdf_bytes,
                     file_name=f"parte_{t_mes(mes).lower()}_{anio}.pdf",
-                    mime="application/pdf", type="primary", width="stretch",
+                    mime="application/pdf",
+                    type="primary",
+                    width="stretch",
                 )
             with col_excel:
                 excel_bytes = generar_excel_mensual(partes_mes)
                 st.download_button(
-                    t("historial.exportar_excel"), data=excel_bytes,
+                    t("historial.exportar_excel"),
+                    data=excel_bytes,
                     file_name=f"parte_{t_mes(mes).lower()}_{anio}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     width="stretch",
@@ -165,7 +188,9 @@ def render() -> None:
         ids_colegas = [None] + [c["id"] for c in colegas]
         colega_sel = c2.selectbox(t("historial.filtro_colega"), etiquetas_colegas)
 
-        anios_filtro = [t("common.todos")] + [str(a) for a in db.get_anios_disponibles(technician_name)]
+        anios_filtro = [t("common.todos")] + [
+            str(a) for a in db.get_anios_disponibles(technician_name)
+        ]
         anio_filtro = c3.selectbox(t("historial.filtro_anio"), anios_filtro)
 
         if st.button(t("common.buscar")):
@@ -200,7 +225,9 @@ def render() -> None:
         tipos_kb = db.get_interventions_types()
         etiquetas_tipos_kb = [t("common.todos")] + [ti["nombre"] for ti in tipos_kb]
         ids_tipos_kb = [None] + [ti["id"] for ti in tipos_kb]
-        tipo_sel_kb = st.selectbox(t("historial.filtro_intervencion"), etiquetas_tipos_kb, key="kb_tipo")
+        tipo_sel_kb = st.selectbox(
+            t("historial.filtro_intervencion"), etiquetas_tipos_kb, key="kb_tipo"
+        )
 
         if st.button(t("common.buscar"), key="kb_buscar"):
             st.session_state["resultados_conocimiento"] = db.buscar_partes(

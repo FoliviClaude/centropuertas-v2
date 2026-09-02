@@ -70,9 +70,7 @@ def registrar_service_worker() -> None:
     )
 
 
-def boton_instalar_app(
-    etiqueta: str, etiqueta_instalada: str, ayuda_ios: str
-) -> None:
+def boton_instalar_app(etiqueta: str, etiqueta_instalada: str, ayuda_ios: str) -> None:
     """
     Bouton "Installer l'application" personnalisé, basé sur l'événement
     `beforeinstallprompt` (Chrome/Edge/Android -- pas Safari/iOS, qui ne
