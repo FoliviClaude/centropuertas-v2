@@ -165,6 +165,25 @@ def init_db() -> None:
     """
     client = _client()
 
+    # --- empresas (multi-entreprise / SaaS) -----------------------------
+    # Première étape de la migration multi-tenant (voir CLAUDE.md) :
+    # cette table existe et toutes les tables ci-dessous reçoivent une
+    # colonne "empresa_id" qui y pointe, mais aucune fonction de
+    # database.py ne filtre encore dessus -- ça viendra dans une étape
+    # suivante, une fois le reste du code (auth.py, pages_app/) adapté.
+    # Pour l'instant il n'existe donc toujours qu'une seule entreprise
+    # (voir _asegurar_empresa_bootstrap), exactement comme avant cette
+    # migration.
+    client.execute("""
+        CREATE TABLE IF NOT EXISTS empresas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            nif_cif TEXT NOT NULL DEFAULT '',
+            activo INTEGER NOT NULL DEFAULT 1,
+            creado_en TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
+        )
+        """)
+
     # --- clients ---------------------------------------------------
     client.execute("""
         CREATE TABLE IF NOT EXISTS clients (
@@ -283,6 +302,12 @@ def init_db() -> None:
         "CREATE INDEX IF NOT EXISTS idx_parts_technician ON parts_de_travail(technician_name)"
     )
 
+    # Migration multi-entreprise : ajoute "empresa_id" partout où c'est
+    # nécessaire. DOIT s'exécuter après la migration multi-utilisateur
+    # ci-dessus (le backfill de technician_id a besoin que
+    # technician_name soit déjà dans sa forme définitive).
+    _migrar_a_multiempresa(client)
+
     # Catalogue par défaut des types d'intervention (une seule fois).
     for nombre in TIPOS_INTERVENCION_DEFECTO:
         client.execute("INSERT OR IGNORE INTO interventions_types (nombre) VALUES (?)", [nombre])
@@ -365,6 +390,101 @@ def _migrar_parts_de_travail_multiusuario(client: libsql_client.ClientSync) -> N
     # pas besoin de les dupliquer ici.
 
 
+def _asegurar_empresa_bootstrap(client: libsql_client.ClientSync) -> int:
+    """
+    Renvoie l'id de l'entreprise "bootstrap" -- celle à laquelle
+    attribuer toutes les données pré-existantes (et, sur une base
+    neuve, la toute première entreprise créée). Crée cette ligne dans
+    "empresas" si elle n'existe pas encore.
+
+    Idempotent : tant qu'aucune deuxième entreprise n'a été créée par
+    ailleurs, il en existe toujours exactement une, et cette fonction
+    la renvoie sans rien recréer.
+    """
+    fila = _fetchone("SELECT id FROM empresas ORDER BY id LIMIT 1")
+    if fila is not None:
+        return fila["id"]
+
+    # Reprend le nom/NIF déjà saisis dans "configurations" s'ils
+    # existent (base pré-existante, avant l'introduction d'"empresas")
+    # -- sinon les valeurs par défaut d'une base neuve.
+    fila_config = _fetchone("SELECT empresa, nif_cif FROM configurations WHERE id = 1")
+    nombre = (fila_config["empresa"] if fila_config else "") or "Centropuertas"
+    nif_cif = (fila_config["nif_cif"] if fila_config else "") or ""
+
+    client.execute("INSERT INTO empresas (nombre, nif_cif) VALUES (?, ?)", [nombre, nif_cif])
+    return _fetchone("SELECT id FROM empresas ORDER BY id DESC LIMIT 1")["id"]
+
+
+def _migrar_a_multiempresa(client: libsql_client.ClientSync) -> None:
+    """
+    Ajoute "empresa_id" aux tables qui n'en ont pas encore, en
+    l'attribuant à l'entreprise bootstrap (voir
+    _asegurar_empresa_bootstrap) -- donc à toutes les données déjà
+    présentes.
+
+    Contrairement à _migrar_parts_de_travail_multiusuario ci-dessus,
+    pas besoin de reconstruire les tables ici : aucune contrainte
+    UNIQUE ne change dans cette étape (ça viendra dans une étape
+    suivante, une fois le reste du code adapté à empresa_id -- voir
+    CLAUDE.md). Un simple ALTER TABLE ... ADD COLUMN ... DEFAULT
+    suffit -- exactement comme _asegurar_columnas le fait déjà pour
+    "role"/"nif_cif" plus haut.
+
+    IMPORTANT : "DEFAULT <id>" sur un ADD COLUMN devient le défaut
+    PERMANENT de la colonne (pas seulement un backfill ponctuel) --
+    tant qu'aucune fonction de database.py ne précise empresa_id
+    explicitement à l'écriture (crear_technician, crear_client, ...),
+    tout nouvel enregistrement continuera silencieusement d'atterrir
+    dans l'entreprise bootstrap. C'est voulu ET suffisant tant qu'il
+    n'existe qu'une seule entreprise, mais DEVRA disparaître dès que
+    "le reste" du code sera adapté (chaque fonction d'écriture devra
+    recevoir empresa_id en paramètre explicite, jamais compter sur ce
+    défaut implicite).
+
+    "technician_id" sur parts_de_travail est backfillé par
+    correspondance de nom (technician_name -> technicians.nombre_display)
+    -- au mieux, comme nombre_historico dans la migration précédente :
+    reste NULL si aucune correspondance (partes très anciens, orphelins
+    d'un technicien renommé ou supprimé).
+    """
+    empresa_id = _asegurar_empresa_bootstrap(client)
+    definicion_empresa_id = f"INTEGER NOT NULL DEFAULT {empresa_id} REFERENCES empresas(id)"
+
+    for tabla in ("technicians", "clients", "interventions_types", "collegues", "parts_de_travail"):
+        _asegurar_columnas(client, tabla, {"empresa_id": definicion_empresa_id})
+
+    # "configurations" : chaque ligne correspondra, à terme, à une
+    # entreprise (id = empresa_id) -- pour l'instant on ajoute juste la
+    # colonne, la ligne id=1 reste la seule tant qu'il n'existe qu'une
+    # entreprise.
+    _asegurar_columnas(client, "configurations", {"empresa_id": definicion_empresa_id})
+
+    colonnas_partes = {
+        f["name"] for f in client.execute("PRAGMA table_info(parts_de_travail)").rows
+    }
+    if "technician_id" not in colonnas_partes:
+        client.execute(
+            "ALTER TABLE parts_de_travail ADD COLUMN technician_id INTEGER REFERENCES technicians(id)"
+        )
+        client.execute("""
+            UPDATE parts_de_travail
+               SET technician_id = (
+                   SELECT id FROM technicians
+                    WHERE technicians.nombre_display = parts_de_travail.technician_name
+                    LIMIT 1
+               )
+        """)
+
+    client.execute("CREATE INDEX IF NOT EXISTS idx_technicians_empresa ON technicians(empresa_id)")
+    client.execute("CREATE INDEX IF NOT EXISTS idx_clients_empresa ON clients(empresa_id)")
+    client.execute(
+        "CREATE INDEX IF NOT EXISTS idx_interventions_types_empresa ON interventions_types(empresa_id)"
+    )
+    client.execute("CREATE INDEX IF NOT EXISTS idx_collegues_empresa ON collegues(empresa_id)")
+    client.execute("CREATE INDEX IF NOT EXISTS idx_parts_empresa ON parts_de_travail(empresa_id)")
+
+
 # ----------------------------------------------------------------------
 # Mots de passe (PBKDF2-HMAC-SHA256, sel aléatoire par compte)
 # ----------------------------------------------------------------------
@@ -389,6 +509,17 @@ def _verificar_password(password: str, hash_guardado_hex: str, salt_hex: str) ->
     salt = bytes.fromhex(salt_hex)
     hash_calculado, _ = hash_password(password, salt)
     return hmac.compare_digest(hash_calculado, hash_guardado_hex)
+
+
+# ----------------------------------------------------------------------
+# Empresas (multi-entreprise) -- lecture seule pour l'instant : la
+# création se fera depuis un futur écran d'administration de la
+# plateforme, hors périmètre de cette étape (voir CLAUDE.md).
+# ----------------------------------------------------------------------
+
+
+def get_empresas() -> list[Row]:
+    return _fetchall("SELECT * FROM empresas ORDER BY nombre COLLATE NOCASE")
 
 
 # ----------------------------------------------------------------------
