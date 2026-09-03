@@ -45,7 +45,8 @@ def _seccion_totales_globales() -> None:
     hoy = dt.date.today()
     anios_disponibles = sorted(set(db.get_anios_disponibles_global() + [hoy.year]), reverse=True)
     anio = st.selectbox(
-        t("dashboard.anio"), anios_disponibles,
+        t("dashboard.anio"),
+        anios_disponibles,
         index=anios_disponibles.index(hoy.year) if hoy.year in anios_disponibles else 0,
     )
 
@@ -66,26 +67,40 @@ def _seccion_totales_globales() -> None:
     df = pd.DataFrame(por_technician)
 
     fig = go.Figure()
-    fig.add_bar(x=df["technician_name"], y=df["horas_normales"],
-                name=t("dashboard.horas_trabajadas"), marker_color=COLOR_HORAS)
-    fig.add_bar(x=df["technician_name"], y=df["horas_extra"],
-                name=t("dashboard.horas_extra"), marker_color=COLOR_EXTRA)
+    fig.add_bar(
+        x=df["technician_name"],
+        y=df["horas_normales"],
+        name=t("dashboard.horas_trabajadas"),
+        marker_color=COLOR_HORAS,
+    )
+    fig.add_bar(
+        x=df["technician_name"],
+        y=df["horas_extra"],
+        name=t("dashboard.horas_extra"),
+        marker_color=COLOR_EXTRA,
+    )
     fig.update_layout(
-        barmode="group", height=380, legend=dict(orientation="h", y=1.12),
+        barmode="group",
+        height=380,
+        legend=dict(orientation="h", y=1.12),
         margin=dict(l=10, r=10, t=10, b=10),
-        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
     )
     st.plotly_chart(fig, width="stretch")
 
     st.dataframe(
-        df.rename(columns={
-            "technician_name": t("dashboard_admin.columna_technician"),
-            "horas_normales": t("dashboard.horas_trabajadas"),
-            "horas_extra": t("dashboard.horas_extra"),
-            "dietas": t("dashboard.dietas"),
-            "total_partes": t("dashboard_admin.columna_total_partes"),
-        }),
-        hide_index=True, width="stretch",
+        df.rename(
+            columns={
+                "technician_name": t("dashboard_admin.columna_technician"),
+                "horas_normales": t("dashboard.horas_trabajadas"),
+                "horas_extra": t("dashboard.horas_extra"),
+                "dietas": t("dashboard.dietas"),
+                "total_partes": t("dashboard_admin.columna_total_partes"),
+            }
+        ),
+        hide_index=True,
+        width="stretch",
     )
 
 
@@ -106,7 +121,9 @@ def _seccion_gestion_usuarios() -> None:
 
         roles_codigo = db.ROLES_DISPONIBLES  # ["technicien", "admin"]
         roles_etiqueta = [t_role(r) for r in roles_codigo]
-        role_etiqueta_sel = st.selectbox(t("dashboard_admin.nuevo_usuario_role"), roles_etiqueta, index=0)
+        role_etiqueta_sel = st.selectbox(
+            t("dashboard_admin.nuevo_usuario_role"), roles_etiqueta, index=0
+        )
         role_sel = roles_codigo[roles_etiqueta.index(role_etiqueta_sel)]
 
         if st.form_submit_button(t("dashboard_admin.crear_cuenta"), type="primary"):
@@ -124,7 +141,9 @@ def _seccion_gestion_usuarios() -> None:
                 # cartes d'historique), donc pensé pour être lisible
                 # ("Antonio García") plutôt qu'un identifiant de connexion.
                 try:
-                    db.crear_technician(login_limpio, password, nombre_display=nombre_limpio, role=role_sel)
+                    db.crear_technician(
+                        login_limpio, password, nombre_display=nombre_limpio, role=role_sel
+                    )
                 except libsql_client.LibsqlError:
                     # Filet de sécurité si deux admins créent le même login
                     # au même instant (course entre la vérification
@@ -132,7 +151,9 @@ def _seccion_gestion_usuarios() -> None:
                     # base tranche, ce message reste correct dans ce cas.
                     st.error(t("dashboard_admin.error_usuario_existe"))
                 else:
-                    st.success(t("dashboard_admin.usuario_creado_ok", login=login_limpio), icon="✅")
+                    st.success(
+                        t("dashboard_admin.usuario_creado_ok", login=login_limpio), icon="✅"
+                    )
                     st.rerun()
 
     st.markdown(f"**{t('dashboard_admin.tabla_usuarios')}**")
@@ -164,13 +185,17 @@ def _seccion_gestion_usuarios() -> None:
 
     etiquetas = [f'{u["nombre_display"]} ({u["login"]})' for u in candidatos]
     etiqueta_sel = st.selectbox(
-        t("dashboard_admin.eliminar_usuario_selector"), etiquetas,
-        label_visibility="collapsed", key="sel_eliminar_usuario",
+        t("dashboard_admin.eliminar_usuario_selector"),
+        etiquetas,
+        label_visibility="collapsed",
+        key="sel_eliminar_usuario",
     )
     usuario_sel = candidatos[etiquetas.index(etiqueta_sel)]
 
     if st.button(t("dashboard_admin.eliminar_usuario_boton"), key="btn_eliminar_usuario"):
-        _dialogo_confirmar_eliminar_usuario(usuario_sel["id"], usuario_sel["nombre_display"], usuario_sel["login"])
+        _dialogo_confirmar_eliminar_usuario(
+            usuario_sel["id"], usuario_sel["nombre_display"], usuario_sel["login"]
+        )
 
 
 @st.dialog(" ", width="small")
@@ -182,10 +207,14 @@ def _dialogo_confirmar_eliminar_usuario(technician_id: int, nombre: str, login: 
     seulement des valeurs simples en argument (jamais une closure, qui
     cesserait de réagir aux clics sur les reruns suivants).
     """
-    st.markdown(f"### {t('dashboard_admin.eliminar_usuario_confirmar_titulo', nombre=nombre, login=login)}")
+    st.markdown(
+        f"### {t('dashboard_admin.eliminar_usuario_confirmar_titulo', nombre=nombre, login=login)}"
+    )
     st.caption(t("dashboard_admin.eliminar_usuario_confirmar_texto"))
     c1, c2 = st.columns(2)
-    if c1.button(t("common.eliminar"), type="primary", width="stretch", key="dlg_eliminar_usuario_si"):
+    if c1.button(
+        t("common.eliminar"), type="primary", width="stretch", key="dlg_eliminar_usuario_si"
+    ):
         try:
             db.eliminar_technician(technician_id)
         except ValueError:

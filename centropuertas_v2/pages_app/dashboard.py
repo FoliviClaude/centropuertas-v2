@@ -21,9 +21,9 @@ from locales import t, t_mes
 from utils.calculos import dias_vacaciones_pendientes
 from utils.styling import encabezado_pagina
 
-COLOR_HORAS = "#2E7D32"      # vert Centropuertas (foncé)
-COLOR_EXTRA = "#81C784"      # vert clair
-COLOR_DIETAS = "#4CAF50"     # vert charte
+COLOR_HORAS = "#2E7D32"  # vert Centropuertas (foncé)
+COLOR_EXTRA = "#81C784"  # vert clair
+COLOR_DIETAS = "#4CAF50"  # vert charte
 
 
 def render() -> None:
@@ -34,9 +34,12 @@ def render() -> None:
     technician_name = auth.nombre_tecnico_actual()
 
     hoy = dt.date.today()
-    anios_disponibles = sorted(set(db.get_anios_disponibles(technician_name) + [hoy.year]), reverse=True)
+    anios_disponibles = sorted(
+        set(db.get_anios_disponibles(technician_name) + [hoy.year]), reverse=True
+    )
     anio = st.selectbox(
-        t("dashboard.anio"), anios_disponibles,
+        t("dashboard.anio"),
+        anios_disponibles,
         index=anios_disponibles.index(hoy.year) if hoy.year in anios_disponibles else 0,
     )
 
@@ -47,15 +50,20 @@ def render() -> None:
         st.info(t("dashboard.sin_datos"), icon="📭")
         return
 
-    pendientes = dias_vacaciones_pendientes(config["dias_vacaciones_anuales"], totales["dias_vacaciones"])
+    pendientes = dias_vacaciones_pendientes(
+        config["dias_vacaciones_anuales"], totales["dias_vacaciones"]
+    )
 
     k1, k2, k3, k4, k5 = st.columns(5)
     k1.metric(t("dashboard.horas_trabajadas"), f'{totales["horas_normales"]:g} h')
     k2.metric(t("dashboard.horas_extra"), f'{totales["horas_extra"]:g} h')
     k3.metric(t("dashboard.dietas"), f'{totales["dietas"]:g}')
-    k4.metric(t("dashboard.vacaciones_consumidas"), f'{totales["dias_vacaciones"]}',
-              help=t("dashboard.de_dias", dias=config["dias_vacaciones_anuales"]))
-    k5.metric(t("dashboard.vacaciones_pendientes"), f'{pendientes}')
+    k4.metric(
+        t("dashboard.vacaciones_consumidas"),
+        f'{totales["dias_vacaciones"]}',
+        help=t("dashboard.de_dias", dias=config["dias_vacaciones_anuales"]),
+    )
+    k5.metric(t("dashboard.vacaciones_pendientes"), f"{pendientes}")
 
     k6, k7 = st.columns(2)
     k6.metric(t("dashboard.dias_baja"), totales["dias_baja"])
@@ -68,7 +76,9 @@ def render() -> None:
         horas_hechas = totales["horas_normales"] + totales["horas_extra"]
         progreso = min(horas_hechas / horas_convenio, 1.0)
         st.markdown(f"**{t('dashboard.progreso_convenio', horas_convenio=horas_convenio)}**")
-        st.progress(progreso, text=f"{horas_hechas:g} h / {horas_convenio:g} h ({progreso * 100:.0f}%)")
+        st.progress(
+            progreso, text=f"{horas_hechas:g} h / {horas_convenio:g} h ({progreso * 100:.0f}%)"
+        )
 
     st.divider()
 
@@ -82,27 +92,44 @@ def render() -> None:
     with col_barras:
         st.markdown(f"**{t('dashboard.grafico_horas')}**")
         fig_barras = go.Figure()
-        fig_barras.add_bar(x=df_completo["nombre_mes"], y=df_completo["horas_normales"],
-                            name=t("dashboard.horas_trabajadas"), marker_color=COLOR_HORAS)
-        fig_barras.add_bar(x=df_completo["nombre_mes"], y=df_completo["horas_extra"],
-                            name=t("dashboard.horas_extra"), marker_color=COLOR_EXTRA)
+        fig_barras.add_bar(
+            x=df_completo["nombre_mes"],
+            y=df_completo["horas_normales"],
+            name=t("dashboard.horas_trabajadas"),
+            marker_color=COLOR_HORAS,
+        )
+        fig_barras.add_bar(
+            x=df_completo["nombre_mes"],
+            y=df_completo["horas_extra"],
+            name=t("dashboard.horas_extra"),
+            marker_color=COLOR_EXTRA,
+        )
         fig_barras.update_layout(
-            barmode="group", height=380, legend=dict(orientation="h", y=1.12),
+            barmode="group",
+            height=380,
+            legend=dict(orientation="h", y=1.12),
             margin=dict(l=10, r=10, t=10, b=10),
-            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
         )
         st.plotly_chart(fig_barras, width="stretch")
 
     with col_lineas:
         st.markdown(f"**{t('dashboard.grafico_dietas')}**")
         fig_lineas = go.Figure()
-        fig_lineas.add_trace(go.Scatter(
-            x=df_completo["nombre_mes"], y=df_completo["dietas"],
-            mode="lines+markers", name=t("dashboard.dietas"),
-            line=dict(color=COLOR_DIETAS, width=3),
-        ))
+        fig_lineas.add_trace(
+            go.Scatter(
+                x=df_completo["nombre_mes"],
+                y=df_completo["dietas"],
+                mode="lines+markers",
+                name=t("dashboard.dietas"),
+                line=dict(color=COLOR_DIETAS, width=3),
+            )
+        )
         fig_lineas.update_layout(
-            height=380, margin=dict(l=10, r=10, t=10, b=10),
-            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            height=380,
+            margin=dict(l=10, r=10, t=10, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
         )
         st.plotly_chart(fig_lineas, width="stretch")

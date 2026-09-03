@@ -48,3 +48,27 @@ pip install -r requirements-dev.txt   # dépendances (runtime + dev)
 - `scripts/import_to_turso.ps1` manipule des secrets et est fait pour
   être lancé par l'utilisateur lui-même dans un terminal, pas via un
   assistant IA (voir l'en-tête du script).
+
+## Migration multi-entreprise (en cours)
+
+Objectif : transformer l'app interne en SaaS multi-tenant (plusieurs
+entreprises, isolation totale des données). Turso/libSQL n'a pas de
+Row-Level Security native — l'isolation repose entièrement sur le
+code applicatif (voir `database.py`), pas sur la base.
+
+Étapes :
+1. **Fait** — table `empresas` + colonne `empresa_id` ajoutée à
+   `technicians`, `clients`, `interventions_types`, `collegues`,
+   `configurations`, `parts_de_travail` (voir `_migrar_a_multiempresa`
+   dans `database.py`). Une seule entreprise existe encore à ce
+   stade ; aucune fonction ne filtre encore par `empresa_id`, aucune
+   contrainte `UNIQUE` n'a changé — changement purement additif, rien
+   d'existant ne casse.
+2. **À faire** — chaque fonction de `database.py` qui touche ces
+   tables reçoit `empresa_id` en paramètre obligatoire ; audit complet
+   des fonctions qui font `WHERE id = ?` sans scope (`eliminar_client`,
+   `actualizar_client`, `eliminar_intervention_type`, etc.) pour
+   ajouter `AND empresa_id = ?` (failles IDOR potentielles sinon) ;
+   `UNIQUE(login)`/`UNIQUE(nombre)` deviennent `UNIQUE(empresa_id, ...)`.
+3. **À faire** — `auth.py`/session gagnent `empresa_id_actual()` ;
+   écran super-admin pour provisionner de nouvelles entreprises.

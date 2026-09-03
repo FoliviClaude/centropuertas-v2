@@ -68,13 +68,18 @@ def _buscar_por_id(tipo: str, item_id: int) -> Row | None:
 # Dialogues génériques (réutilisés par les 3 catalogues)
 # ----------------------------------------------------------------------
 
+
 @st.dialog(" ", width="small")
 def _dialogo_confirmar_eliminar(tipo: str, item_id: int, nombre: str) -> None:
     st.markdown(f"### {t('referencias.confirmar_eliminar_titulo', nombre=nombre)}")
     st.caption(t("referencias.confirmar_eliminar_texto"))
     c1, c2 = st.columns(2)
-    if c1.button(t("referencias.confirmar_eliminar_boton"), type="primary",
-                 use_container_width=True, key="dlg_confirmar_eliminar_si"):
+    if c1.button(
+        t("referencias.confirmar_eliminar_boton"),
+        type="primary",
+        use_container_width=True,
+        key="dlg_confirmar_eliminar_si",
+    ):
         _ELIMINAR_POR_TIPO[tipo](item_id)
         st.success(t("referencias.eliminado_ok"), icon="✅")
         st.rerun()
@@ -87,9 +92,16 @@ def _dialogo_editar_simple(tipo: str, item_id: int) -> None:
     """Édition d'une entité à un seul champ "nombre" (types, collègues)."""
     item = _buscar_por_id(tipo, item_id)
     st.markdown(f"### {t(_TITULO_NUEVO_POR_TIPO[tipo])}")
-    nuevo_nombre = st.text_input(t("referencias.nombre"), value=item["nombre"], key="dlg_editar_simple_nombre")
+    nuevo_nombre = st.text_input(
+        t("referencias.nombre"), value=item["nombre"], key="dlg_editar_simple_nombre"
+    )
     c1, c2 = st.columns(2)
-    if c1.button(t("common.guardar"), type="primary", use_container_width=True, key="dlg_editar_simple_guardar"):
+    if c1.button(
+        t("common.guardar"),
+        type="primary",
+        use_container_width=True,
+        key="dlg_editar_simple_guardar",
+    ):
         if not nuevo_nombre.strip():
             st.error(t("referencias.nombre_obligatorio"))
         else:
@@ -104,12 +116,20 @@ def _dialogo_editar_simple(tipo: str, item_id: int) -> None:
 def _dialogo_editar_cliente(cliente_id: int) -> None:
     cliente = _buscar_por_id("cliente", cliente_id)
     st.markdown(f"### {t('common.editar')} — {cliente['nombre']}")
-    nombre = st.text_input(t("referencias.nombre"), value=cliente["nombre"], key="dlg_editar_cli_nombre")
-    direccion = st.text_input(t("referencias.direccion"), value=cliente["direccion"], key="dlg_editar_cli_direccion")
-    telefono = st.text_input(t("referencias.telefono"), value=cliente["telefono"], key="dlg_editar_cli_telefono")
+    nombre = st.text_input(
+        t("referencias.nombre"), value=cliente["nombre"], key="dlg_editar_cli_nombre"
+    )
+    direccion = st.text_input(
+        t("referencias.direccion"), value=cliente["direccion"], key="dlg_editar_cli_direccion"
+    )
+    telefono = st.text_input(
+        t("referencias.telefono"), value=cliente["telefono"], key="dlg_editar_cli_telefono"
+    )
     notas = st.text_area(t("referencias.notas"), value=cliente["notas"], key="dlg_editar_cli_notas")
     c1, c2 = st.columns(2)
-    if c1.button(t("common.guardar"), type="primary", use_container_width=True, key="dlg_editar_cli_guardar"):
+    if c1.button(
+        t("common.guardar"), type="primary", use_container_width=True, key="dlg_editar_cli_guardar"
+    ):
         if not nombre.strip():
             st.error(t("referencias.nombre_obligatorio"))
         else:
@@ -123,6 +143,7 @@ def _dialogo_editar_cliente(cliente_id: int) -> None:
 # ----------------------------------------------------------------------
 # Onglet Clients
 # ----------------------------------------------------------------------
+
 
 def _tab_clientes() -> None:
     with st.expander(t("referencias.nuevo_cliente"), icon="➕"):
@@ -156,15 +177,20 @@ def _tab_clientes() -> None:
                 if cliente["notas"]:
                     st.caption(f"📝 {cliente['notas']}")
             with c2:
-                if st.button(t("common.editar"), key=f"edit_cli_{cliente['id']}", use_container_width=True):
+                if st.button(
+                    t("common.editar"), key=f"edit_cli_{cliente['id']}", use_container_width=True
+                ):
                     _dialogo_editar_cliente(cliente["id"])
-                if st.button(t("common.eliminar"), key=f"del_cli_{cliente['id']}", use_container_width=True):
+                if st.button(
+                    t("common.eliminar"), key=f"del_cli_{cliente['id']}", use_container_width=True
+                ):
                     _dialogo_confirmar_eliminar("cliente", cliente["id"], cliente["nombre"])
 
 
 # ----------------------------------------------------------------------
 # Onglet Types d'intervention
 # ----------------------------------------------------------------------
+
 
 def _tab_tipos() -> None:
     with st.expander(t("referencias.nuevo_tipo"), icon="➕"):
@@ -188,15 +214,20 @@ def _tab_tipos() -> None:
             c1, c2 = st.columns([4, 1])
             c1.markdown(f"**🔧 {tipo['nombre']}**")
             with c2:
-                if st.button(t("common.editar"), key=f"edit_tip_{tipo['id']}", use_container_width=True):
+                if st.button(
+                    t("common.editar"), key=f"edit_tip_{tipo['id']}", use_container_width=True
+                ):
                     _dialogo_editar_simple("tipo", tipo["id"])
-                if st.button(t("common.eliminar"), key=f"del_tip_{tipo['id']}", use_container_width=True):
+                if st.button(
+                    t("common.eliminar"), key=f"del_tip_{tipo['id']}", use_container_width=True
+                ):
                     _dialogo_confirmar_eliminar("tipo", tipo["id"], tipo["nombre"])
 
 
 # ----------------------------------------------------------------------
 # Onglet Compañeros
 # ----------------------------------------------------------------------
+
 
 def _tab_colegas() -> None:
     with st.expander(t("referencias.nuevo_colega"), icon="➕"):
@@ -220,17 +251,25 @@ def _tab_colegas() -> None:
             c1, c2 = st.columns([4, 1])
             c1.markdown(f"**👷 {colega['nombre']}**")
             with c2:
-                if st.button(t("common.editar"), key=f"edit_col_{colega['id']}", use_container_width=True):
+                if st.button(
+                    t("common.editar"), key=f"edit_col_{colega['id']}", use_container_width=True
+                ):
                     _dialogo_editar_simple("colega", colega["id"])
-                if st.button(t("common.eliminar"), key=f"del_col_{colega['id']}", use_container_width=True):
+                if st.button(
+                    t("common.eliminar"), key=f"del_col_{colega['id']}", use_container_width=True
+                ):
                     _dialogo_confirmar_eliminar("colega", colega["id"], colega["nombre"])
 
 
 def render() -> None:
     encabezado_pagina(t("referencias.titulo"), t("referencias.subtitulo"), icono="database")
-    tab_clientes, tab_tipos, tab_colegas = st.tabs([
-        t("referencias.tab_clientes"), t("referencias.tab_tipos"), t("referencias.tab_colegas"),
-    ])
+    tab_clientes, tab_tipos, tab_colegas = st.tabs(
+        [
+            t("referencias.tab_clientes"),
+            t("referencias.tab_tipos"),
+            t("referencias.tab_colegas"),
+        ]
+    )
     with tab_clientes:
         _tab_clientes()
     with tab_tipos:
